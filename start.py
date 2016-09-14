@@ -5,7 +5,7 @@ import alix
 
 r = redis.StrictRedis()
 p = r.pubsub()
-p.subscribe('micserv')
+p.subscribe('alix:cmd')
 
 while True:
 	event = p.get_message()
@@ -16,8 +16,8 @@ while True:
 		command = datajs['command']
 		if command == 'add':
 			name = datajs['name']
-			path = datajs['path']
-			alix.add(name, path)
+			srvcmd = datajs['srvcmd']
+			alix.add(name, srvcmd)
 		elif command == 'remove':
                         name = datajs['name']
 			alix.remove(name)
