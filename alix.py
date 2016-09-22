@@ -15,22 +15,23 @@ def getCommand(name):
 def remove(name):
         r = redis.StrictRedis()
 	r.delete('alix:name:' + name)
+	r.delete('alix:cmd:' + name)
 
 def start(name):
 	cmd = getCommand(name)
-	p = Popen(['sh', cmd], stdout=subprocess.PIPE)
-	r = redis.StrictRedis()
-	r.set('alix:pid:' + name, p.pid)
-	print ("start " + name + ' - ' + str(p.pid))
+	p = Popen(['python', cmd, name], stdout=subprocess.PIPE)
+	print ("start " + name)
 
 def stop(name):
 	r = redis.StrictRedis()
-	os.kill(int(r.get('alix:pid:' + name)), signal.SIGKILL)
-	r.set('alix:pid:' + name, 0)
+	pid = r.get('alix:pid:' + name)
+	pid = int(pid)
+	r.publish('alix:cmd:' + name, 'stop')
 	print ("stop " + name)
 
 def status(name):
-	print("status " + name)
+	r.redis.StrictRedis()
+	p = r.publish('alix:cmd:' + name, 'status')
 
 def list():
 	services = []
@@ -39,6 +40,5 @@ def list():
 	for key in servicesKeys:
 		name = r.get(key)
 		cmd = r.get('alix:cmd:' + name)
-		pid = r.get('alix:pid:' + name)
-		services.append({'name' : name, 'cmd' : cmd, 'pid' : pid})
+		services.append({'name' : name, 'cmd' : cmd})
 	return services
