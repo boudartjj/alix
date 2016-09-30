@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 
-#this micro service send uplanet events messages to telegram
-
 import sys
+import traceback
 import subprocess
 from subprocess import Popen
 import os, signal
@@ -10,24 +9,34 @@ import threading
 import redis
 import time
 
-def add(name, cmd):
+def add(name, channel, cmd, description=''):
         r = redis.StrictRedis()
         r.set('alix:name:' + name, name)
         r.set('alix:cmd:' + name, cmd)
+	r.set('alix:channel:' + name, channel)
+	r.set('alix:description:' + name, description)
 
 def getCommand(name):
         r = redis.StrictRedis()
         return r.get('alix:cmd:' + name)
+
+def getChannel(name):
+        r = redis.StrictRedis()
+        return r.get('alix:channel:' + name)
 
 def remove(name):
         stop(name)
         r = redis.StrictRedis()
         r.delete('alix:name:' + name)
         r.delete('alix:cmd:' + name)
+	r.delete('alix:channel:' + name)
+	r.delete('alix:status:' + name)
+	r.delete('alix:description:' + name)
 
 def start(name):
         cmd = getCommand(name)
-        p = Popen(['python', cmd, name], stdout=subprocess.PIPE)
+	channel = getChannel(name)
+        p = Popen(['python', cmd, name, channel], stdout=subprocess.PIPE)
         print ("start " + name)
 
 def stop(name):
@@ -35,9 +44,23 @@ def stop(name):
         r.publish('alix:cmd:' + name, 'stop')
         print ("stop " + name)
 
+def stopAll():
+	services = list()
+	for svc in services:
+		stop(svc['name'])
+
+def startAll():
+        services = list()
+        for svc in services:
+                start(svc['name'])
+
 def status(name):
         r = redis.StrictRedis()
-        p = r.publish('alix:cmd:' + name, 'status')
+	r.set('alix:status:' + name, 'not active')
+	r.publish('alix:cmd:' + name, 'status')
+	time.sleep(1)
+	status = r.get('alix:status:' + name)
+	print status
 
 def list():
         services = []
@@ -46,14 +69,20 @@ def list():
         for key in servicesKeys:
                 name = r.get(key)
                 cmd = r.get('alix:cmd:' + name)
-                services.append({'name' : name, 'cmd' : cmd})
+		channel = r.get('alix:channel:' + name)
+		description = r.get('alix:description:' + name)
+                services.append({'name' : name, 'cmd' : cmd, 'channel': channel, 'description': description})
         return services
 
+def _getErrorMesssage():
+	exc_type, exc_value, exc_traceback = sys.exc_info()
+	return repr(traceback.format_exception(exc_type, exc_value, exc_traceback))
+
 class Alix():
-	def __init__(self, name):
+	def __init__(self, name, channel):
 		self._active = False
 		self.name = name
-		self.r = redis.StrictRedis()
+		self.channel = channel
 
 	def isActive(self):
 		return self._active
@@ -62,7 +91,7 @@ class Alix():
 		self._active = True
                 self.sendMessage('starting')
 
-		tProcess = threading.Thread(target = self.process)
+		tProcess = threading.Thread(target = self.run)
 		tProcess.start()
 		tListner = threading.Thread(target = self._listen)
 		tListner.start()
@@ -77,7 +106,8 @@ class Alix():
 
 	def _listen(self):
 		self.sendMessage( 'listen on')
-        	p = self.r.pubsub()
+		r = redis.StrictRedis()
+        	p = r.pubsub()
         	p.subscribe('alix:cmd:' + self.name)
 
         	while self.isActive():
@@ -87,13 +117,16 @@ class Alix():
                         	if cmd == 'stop':
                                 	self.stop()
                         	elif cmd == 'status':
+					r.set('alix:status:' + self.name, 'active')
                                 	self.sendMessage('active')
                 	time.sleep(0.001)
+		p.close()
 		self.sendMessage('listen off')
 
 	def _ping(self):
 		self.sendMessage('ping on')
-		p = self.r.pubsub()
+		r = redis.StrictRedis()
+		p = r.pubsub()
                 p.subscribe('alix:ping')
 
 		while self.isActive():
@@ -101,11 +134,37 @@ class Alix():
                         if event and event['type'] == 'message':
                         	self.sendMessage('active')
                         time.sleep(0.001)
+		p.close()
 		self.sendMessage('ping off')
 
 	def sendMessage(self, message):
-		print 'alix:msg:' + self.name + ' - ' + message
-		self.r.publish('alix:msg:' + self.name, message)
+		r = redis.StrictRedis()
+		r.publish('alix:msg:' + self.name, message)
 
-	def process(self):
+	def run(self):
+		self.sendMessage('running')
+		r = redis.StrictRedis()
+		p = r.pubsub()
+		p.subscribe(self.channel)
+		while self.isActive():
+			event = p.get_message()
+			if event: 
+				fo = open('alix.msg', 'a')
+                                fo.write(time.strftime('%Y%m%d%H%M%S', time.gmtime()) + ' - message received\n')
+				fo.write(time.strftime('%Y%m%d%H%M%S', time.gmtime()) + ' - ' + str(event) + '\n')
+				fo.close() 
+				self.sendMessage(str(event))
+			if event and event['type'] == 'message':
+				try: 
+					self.onMessage(event['data'])
+				except Exception as e:
+					fo = open('alix.err', 'a')
+					fo.write(time.strftime('%Y%m%d%H%M%S', time.gmtime()) + ' - ' + _getErrorMesssage() + '\n')
+					fo.close()
+					r.publish('alix:error:' + self.name, str(e))
+			time.sleep(0.001)
+		p.close()
+		self.sendMessage('not running')
+
+	def onMessage(self, message):
 		return None
