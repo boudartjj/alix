@@ -2,6 +2,7 @@
 
 #this class is micro service skeleton
 
+import sys
 from alix import Alix
 
 class MicroService(Alix):
