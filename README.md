@@ -1,7 +1,7 @@
 # Alix, the tiny micro service platform for Python
 Alix is a micro services platform for Python. It is based on the Redis message broker.
 All classes that implements the Alix class:
-- have the onMessage method executed each time each time a message is sent to the channel they are listening
+- have the onMessage method executed each time a message is sent to the channel they are listening
 - are supported by the Alix platform (start, stop, status)
 
 INSTALL ALIX
