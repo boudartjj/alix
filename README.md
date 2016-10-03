@@ -10,7 +10,6 @@ INSTALL ALIX
 - copy alix.py and skeleton_ms.py in your python microservices folder
 
 CREATE AND START A NEW MICRO SERVICE
-All you have to do is to:
 - copy the skeleton_ms.py file and implement you code in the onMessage(message) method
     - cp skeleton_ms.py my_ms.py
 - register your service
