@@ -8,37 +8,23 @@ import redis
 import time
 import json
 
-def _save(name, channel, cmd, config, description=''):
+def _save(name, channel, cmd, config, description):
 	_saveJSON({'name': name, 'cmd': cmd, 'config': config, 'channel': channel, 'description': description})
 
 def _saveJSON(svc):
 	name = svc['name']
         r = redis.StrictRedis()
-        r.set('alix:name:' + name, name)
-        r.set('alix:cmd:' + name, svc['cmd'])
-	r.set('alix:config:' + name, svc['config'])
-        r.set('alix:channel:' + name, svc['channel'])
-        r.set('alix:description:' + name, svc['description'])
+	r.set('alix:config:' + name, json.dumps(svc))
 
 def _load(name):
 	r = redis.StrictRedis()
-	cmd = r.get('alix:cmd:' + name)
-	config = r.get('alix:config:' + name)
-	channel = r.get('alix:channel:' + name)	
-	description = r.get('alix:description:' + name)
-	return {'name': name, 'cmd': cmd, 'config': config,  'channel': channel, 'description': description}
+	return json.loads(r.get('alix:config:' + name))
 
 def _delete(name):
 	r = redis.StrictRedis()
-	r.delete('alix:name:' + name)
-        r.delete('alix:cmd:' + name)
 	r.delete('alix:config:' + name)
-        r.delete('alix:channel:' + name)
-        r.delete('alix:status:' + name)
-        r.delete('alix:description:' + name)
 
-
-def add(name, channel, cmd, config, description=''):
+def register(name, channel, cmd, config='', description=''):
 	_save(name, channel, cmd, config, description)
 
 def getCommand(name):
@@ -89,7 +75,7 @@ def move(sourceName, destinationName):
         copy(sourceName, destinationName)
         remove(sourceName)
 
-def remove(name):
+def unregister(name):
         stop(name)
 	_delete(name)
 
@@ -125,13 +111,10 @@ def status(name):
 def list():
         services = []
         r = redis.StrictRedis()
-        servicesKeys = r.keys('alix:name:*')
+        servicesKeys = r.keys('alix:config:*')
         for key in servicesKeys:
-                name = r.get(key)
-                cmd = r.get('alix:cmd:' + name)
-		channel = r.get('alix:channel:' + name)
-		description = r.get('alix:description:' + name)
-                services.append({'name' : name, 'cmd' : cmd, 'channel': channel, 'description': description})
+                config  = json.loads(r.get(key))
+                services.append(config)
         return services
 
 def sendMessage(channel, message):
