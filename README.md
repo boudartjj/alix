@@ -48,3 +48,8 @@ AVAILABLE METHODS
         - name: micro service name
 - list()
     - returns the list of registered microsevices
+- sendMessage(channel, message)
+    - send a message to the bus channel
+    - parameters
+        - channel: name of the channel
+        - message: message that will be sent to the channel
