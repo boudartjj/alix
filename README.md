@@ -22,7 +22,7 @@ CREATE AND START A NEW MICRO SERVICE
         - alix.sendMessage('myMicroservice:myMessage', 'Hello, World!'):
 
 AVAILABLE METHODS
-- add(name, channel, cmd, config='', description='')
+- register(name, channel, cmd, config='', description='')
     - register a new microservice to the platform
     - parameters
         - name: micro service name
@@ -30,7 +30,7 @@ AVAILABLE METHODS
         - cmd: microservice python file path
         - config: microservice config file path (optional)
         - description: microservice description (optional)
-- remove(name)
+- unregister(name)
     -unregister microservice
     - parameters
         - name: micro service name   
