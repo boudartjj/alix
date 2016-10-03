@@ -29,7 +29,7 @@ AVAILABLE METHODS
         - channel: name of the channel the service is listening
         - cmd: microservice python file path
         - config: microservice config file path (optional)
-        - description: microservice description
+        - description: microservice description (optional)
 - remove(name)
     -unregister microservice
     - parameters
