@@ -7,7 +7,7 @@ All classes that implements the Alix class:
 INSTALL ALIX
 - install Redis (http://redis.io/download)
 - install redis-py (https://pypi.python.org/pypi/redis)
-- copy alix.py and skeleton_ms.py in your python microservices folder
+- copy alix.py and skeleton_ms.py in your microservices folder
 
 CREATE AND START A NEW MICRO SERVICE
 - copy the skeleton_ms.py file and implement you code in the onMessage(message) method
