@@ -9,10 +9,10 @@ INSTALL ALIX
 CREATE AND START A NEW MICRO SERVICE
 All you have to do is to:
 - copy the skeleton_ms.py file and implement you code in the onMessage(message) method
-    cp skeleton_ms.py my_ms.py
+    - cp skeleton_ms.py my_ms.py
 - register your service
-    start python
-    in python:
-        import alix
-        alix.add('myMicroservice', 'myMicroservice:myMessage', '/home/alix/my_ms.py','/home/alix/my_ms.config' , 'this is a short description of my micro service')
-        alix.start('myMicroservice')
+    - start python
+    - in python:
+        - import alix
+        - alix.add('myMicroservice', 'myMicroservice:myMessage', '/home/alix/my_ms.py','/home/alix/my_ms.config' , 'this is a short description of my micro service')
+        - alix.start('myMicroservice')
