@@ -33,7 +33,17 @@ AVAILABLE METHODS
 - unregister(name)
     -unregister microservice
     - parameters
-        - name: micro service name   
+        - name: micro service name
+- rename(oldName, newName)
+    -rename microservice
+    - parameters
+        - oldName: micro service old name
+        - newName: micro service new name
+- clone(sourceName, newName)
+    -clone microservice
+    - parameters
+        - sourceName: micro service source name
+        - newName: micro service new name
 - status(name)
     - get microservice status
     - parameters
