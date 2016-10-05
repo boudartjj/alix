@@ -67,13 +67,13 @@ def saveConfig(name, config):
 	configFile = getConfig(name)
 	json.dump(config, open(configFile, 'w'))
 
-def copy(sourceName, destinationName):
+def clone(sourceName, destinationName):
         r = redis.StrictRedis()
-        add(destinationName, getChannel(sourceName), getCommand(sourceName), getDescription(sourceName))
+        register(destinationName, getChannel(sourceName), getCommand(sourceName), getDescription(sourceName))
 
-def move(sourceName, destinationName):
-        copy(sourceName, destinationName)
-        remove(sourceName)
+def rename(sourceName, destinationName):
+        clone(sourceName, destinationName)
+        unregister(sourceName)
 
 def unregister(name):
         stop(name)
@@ -104,7 +104,7 @@ def status(name):
         r = redis.StrictRedis()
 	r.set('alix:status:' + name, 'not active')
 	r.publish('alix:cmd:' + name, 'status')
-	time.sleep(1)
+	time.sleep(0.1)
 	status = r.get('alix:status:' + name)
 	print status
 
@@ -166,7 +166,7 @@ class Alix():
                         	elif cmd == 'status':
 					r.set('alix:status:' + self.name, 'active')
                                 	self._sendMessage('active')
-                	time.sleep(0.001)
+                	time.sleep(0.1)
 		p.close()
 		self._sendMessage('listen off')
 
@@ -180,12 +180,16 @@ class Alix():
                         event = p.get_message()
                         if event and event['type'] == 'message':
                         	self._sendMessage('active')
-                        time.sleep(0.001)
+                        time.sleep(0.1)
 		p.close()
 		self._sendMessage('ping off')
 
 	def _sendMessage(self, message):
 		sendMessage('alix:msg:' + self.name, message)
+
+	def sendMessage(self, channel, message):
+		sendMessage(channel, message)
+		self._sendMessage(json.dumps({'timestamp': time.strftime('%Y%m%d%H%M%S', time.gmtime()), 'Type': 'message sent', 'name': self.name , 'message': message}))
 
 	def _run(self):
 		self._sendMessage('running')
@@ -195,20 +199,14 @@ class Alix():
 		while self.isActive():
 			event = p.get_message()
 			if event: 
-				#fo = open('alix.msg', 'a')
-                                #fo.write(time.strftime('%Y%m%d%H%M%S', time.gmtime()) + ' - message received\n')
-				#fo.write(time.strftime('%Y%m%d%H%M%S', time.gmtime()) + ' - ' + str(event) + '\n')
-				#fo.close() 
-				self._sendMessage(str({'timestamp': time.strftime('%Y%m%d%H%M%S', time.gmtime()), 'name': self.name , 'message': str(event)}))
+				self._sendMessage(json.dumps({'timestamp': time.strftime('%Y%m%d%H%M%S', time.gmtime()), 'Type': 'message received', 'name': self.name , 'message': str(event)}))
 			if event and event['type'] == 'message':
 				try: 
 					self.onMessage(event['data'])
 				except Exception as e:
-					fo = open('alix.err', 'a')
-					fo.write(time.strftime('%Y%m%d%H%M%S', time.gmtime()) + ' - ' + _getErrorMesssage() + '\n')
-					fo.close()
-					r.publish('alix:error:' + self.name, str(e))
-			time.sleep(0.001)
+					strNow = time.strftime('%Y%m%d%H%M%S', time.gmtime()) 
+					r.publish('alix:err:' + self.name, json.dumps({'timestamp':strNow, 'serviceName':self.name, 'errorMessage': _getErrorMesssage()}))
+			time.sleep(0.01)
 		p.close()
 		self._sendMessage('not running')
 
