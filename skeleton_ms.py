@@ -11,6 +11,7 @@ class MicroService(Alix):
 
 	def onMessage(self, message):
 		#implement your code here
+		pass
 
 #get micro service name
 name = sys.argv[1]
