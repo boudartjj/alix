@@ -51,21 +51,30 @@ def setDescription(name, description):
         svc['description'] = description
         _saveJSON(svc)
 
-def getConfig(name):
-        return _load(name)['config']
+def getParams(name):
+	svc = _load(name)
+	if not 'params' in svc.keys():
+		svc['params'] = {}
+		_saveJSON(svc)
+	return _load(name)['params']	
 
-def setConfig(name, config):
-        svc = _load(name)
-        svc['config'] = config
-        _saveJSON(svc)
+def getParam(name, param):
+	paramValue = None
+	params = getParams(name)
+	if param in params: paramValue = params[param]
+	return paramValue
 
-def loadConfig(name):
-	configFile = getConfig(name)
-	return json.load(open(configFile))
+def setParam(name, param, value):
+	svc = _load(name)
+	if not 'params' in svc.keys():
+		svc['params'] = {}
+	svc['params'][param] = value
+	_saveJSON(svc)
 
-def saveConfig(name, config):
-	configFile = getConfig(name)
-	json.dump(config, open(configFile, 'w'))
+def delParam(name, param):
+	svc = _load(name)
+	if 'params' in svc and param in svc['params']: del svc['params'][param]
+	_saveJSON(svc)
 
 def clone(sourceName, destinationName):
         r = redis.StrictRedis()
@@ -195,17 +204,17 @@ class Alix():
 		self._sendMessage('running')
 		r = redis.StrictRedis()
 		p = r.pubsub()
-		p.subscribe(self.channel)
+		p.psubscribe(self.channel)
 		while self.isActive():
 			event = p.get_message()
 			if event: 
 				self._sendMessage(json.dumps({'timestamp': time.strftime('%Y%m%d%H%M%S', time.gmtime()), 'Type': 'message received', 'name': self.name , 'message': str(event)}))
-			if event and event['type'] == 'message':
+			if event and event['type'] == 'pmessage':
 				try: 
 					self.onMessage(event['data'])
 				except Exception as e:
 					strNow = time.strftime('%Y%m%d%H%M%S', time.gmtime()) 
-					r.publish('alix:err:' + self.name, json.dumps({'timestamp':strNow, 'serviceName':self.name, 'errorMessage': _getErrorMesssage()}))
+					sendMessage('alix:err:' + self.name, json.dumps({'timestamp':strNow, 'serviceName':self.name, 'errorMessage': _getErrorMesssage()}))
 			time.sleep(0.01)
 		p.close()
 		self._sendMessage('not running')
