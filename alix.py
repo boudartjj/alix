@@ -160,6 +160,12 @@ class Alix():
 		self._sendMessage('stopping')
 		self._active = False
 
+	def getParam(self, param):
+		return getParam(self.name, param)
+
+	def setParam(self, param, value):
+		setParam(self.name, param, value)
+
 	def _listen(self):
 		self._sendMessage( 'listen on')
 		r = redis.StrictRedis()

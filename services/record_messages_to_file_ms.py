@@ -12,7 +12,7 @@ class MicroService(Alix):
 
 	def onMessage(self, message):
 		#save error message into file
-		fo = open(alix.getParam(self.name, 'path'), 'a')
+		fo = open(self.getParam('path'), 'a')
 		fo.write(message + '\n')
 		fo.close() 
 
