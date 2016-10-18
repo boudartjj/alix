@@ -33,6 +33,6 @@ setup(
         'Programming Language :: Python :: 2.7',
     ],
     keywords='microservices framework',
-    packages=['src'],
+    packages=['src', 'services'],
     install_requires=['redis'],
 )
