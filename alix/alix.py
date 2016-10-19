@@ -229,15 +229,3 @@ class Alix():
 
 	def onMessage(self, message):
 		return None
-
-cmd = sys.argv[1]
-print cmd
-if cmd == "list":
-	print list()
-elif cmd == 'stopAll':
-	stopAll()
-elif cmd == 'startAll':
-	startAll()
-elif cmd == 'restartAll':
-	stopAll()
-	startAll()
