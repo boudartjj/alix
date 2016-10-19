@@ -33,6 +33,6 @@ setup(
         'Programming Language :: Python :: 2.7',
     ],
     keywords='microservices framework',
-    packages=['alix', 'services'],
+    packages=['alix'],
     install_requires=['redis'],
 )

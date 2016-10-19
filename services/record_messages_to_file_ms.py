@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 
-#this class is micro service skeleton
-
 import sys
-import alix
 from alix import Alix
 
 class MicroService(Alix):
