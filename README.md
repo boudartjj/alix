@@ -16,12 +16,12 @@ CREATE AND START A NEW MICRO SERVICE
     - start python
     - in python:
         - import alix
-        - alix.add('myMicroservice', 'myMicroservice:myMessage', '/home/alix/my_ms.py','/home/alix/my_ms.config' , 'this is a short description of my micro service')
+        - alix.add('myMicroservice', 'myMicroservice:myMessage', '/home/alix/my_ms.py', 'this is a short description of my micro service')
         - alix.start('myMicroservice')
         - alix.sendMessage('myMicroservice:myMessage', 'Hello, World!'):
 
 AVAILABLE METHODS
-- register(name, channel, cmd, config='', description='')
+- register(name, channel, cmd, description='')
     - register a new microservice to the platform
     - parameters
         - name: micro service name
