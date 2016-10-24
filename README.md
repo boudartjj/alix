@@ -27,7 +27,7 @@ AVAILABLE METHODS
         - name: micro service name
         - channel: name of the channel the service is listening
         - cmd: microservice python file path
-        - config: microservice config file path (optional)
+        - config: microservice config (optional)
         - description: microservice description (optional)
 - unregister(name)
     -unregister microservice
