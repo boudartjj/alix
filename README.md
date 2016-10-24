@@ -11,7 +11,7 @@ INSTALL ALIX
 CREATE AND START A NEW MICRO SERVICE
 - copy the skeleton_ms.py (https://github.com/boudartjj/alix/tree/master/services) file and implement you code in the onMessage(message) method
     - cp skeleton_ms.py my_ms.py
-    - implement your code in the onMessage method
+    - implement your code in the onMessage method (see examples: https://github.com/boudartjj/alix/tree/master/services)
 - register, start and test your service
     - start python
     - in python:
