@@ -10,8 +10,8 @@ import redis
 import time
 import json
 
-def _save(name, channel, cmd, config, description):
-	_saveJSON({'name': name, 'cmd': cmd, 'config': config, 'channel': channel, 'description': description})
+def _save(name, channel, cmd, description):
+	_saveJSON({'name': name, 'cmd': cmd, 'channel': channel, 'description': description})
 
 def _saveJSON(svc):
 	name = svc['name']
@@ -26,8 +26,8 @@ def _delete(name):
 	r = redis.StrictRedis()
 	r.delete('alix:config:' + name)
 
-def register(name, channel, cmd, config='', description=''):
-	_save(name, channel, cmd, config, description)
+def register(name, channel, cmd, description=''):
+	_save(name, channel, cmd, description)
 
 def getCommand(name):
 	return _load(name)['cmd']
