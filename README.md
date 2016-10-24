@@ -16,7 +16,7 @@ CREATE AND START A NEW MICRO SERVICE
     - start python
     - in python:
         - import alix
-        - alix.add('myMicroservice', 'myMicroservice:myMessage', '/home/alix/my_ms.py', 'this is a short description of my micro service')
+        - alix.register('myMicroservice', 'myMicroservice:myMessage', '/home/alix/my_ms.py', 'this is a short description of my micro service')
         - alix.start('myMicroservice')
         - alix.sendMessage('myMicroservice:myMessage', 'Hello, World!'):
 
