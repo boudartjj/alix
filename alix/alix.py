@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 import sys
 import traceback
@@ -27,9 +27,33 @@ def _delete(name):
 	r.delete('alix:config:' + name)
 
 def register(name, channel, cmd, description=''):
+	"""
+	register new micro service
+	
+	args:
+		name: name of the micro service
+		channel: name of the channel (* can be used as a wildcard) the micro service is listening
+		cmd: path to the python micro service path
+		description: description of the micro service
+
+	example:
+		alix.register('myMicroservice', 'myMicroservice:myMessage', '/home/alix/my_ms.py', 'this is a short description of my micro service')
+	"""
 	_save(name, channel, cmd, description)
 
 def getCommand(name):
+	"""
+	get the path to the micro service python file that is executed each time a message is published to the channel it is listening
+
+	args:
+		name: name of the micro service
+
+	returns:
+		path to the micro service python file that is executed each time a message is published to the channel it is listening
+
+	example: 
+		alix.getCommand('myMicroservice')
+	"""
 	return _load(name)['cmd']
 
 def setCommand(name, command):
@@ -229,3 +253,15 @@ class Alix():
 
 	def onMessage(self, message):
 		return None
+
+if __name__ == "__main__":
+	cmd = sys.argv[1]
+	if cmd == "list":
+        	print list()
+	elif cmd == 'stopAll':
+        	stopAll()
+	elif cmd == 'startAll':
+        	startAll()
+	elif cmd == 'restartAll':
+        	stopAll()
+        	startAll()

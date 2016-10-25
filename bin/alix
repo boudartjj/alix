@@ -1,0 +1,16 @@
+#!/usr/bin/python
+
+from alix import alix
+import sys
+
+if __name__ == "__main__":
+	cmd = sys.argv[1]
+	if cmd == "list":
+        	print alix.list()
+	elif cmd == 'stopAll':
+        	alix.stopAll()
+	elif cmd == 'startAll':
+        	alix.startAll()
+	elif cmd == 'restartAll':
+        	alix.stopAll()
+        	alix.startAll()
