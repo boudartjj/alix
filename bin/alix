@@ -6,11 +6,56 @@ import sys
 if __name__ == "__main__":
 	cmd = sys.argv[1]
 	if cmd == "list":
-        	print alix.list()
+		list = alix.list()
+		print 'STATUS'.ljust(8) + '  ' + 'SERVICE NAME'.ljust(32) + '  ' + 'CHANNEL'.ljust(48) + '  ' + 'SERVICE PATH'.ljust(64)
+		print '-'*8 + '-'*32 + '  ' + '-'*48 + '  ' + '-'*64
+		for item in list:
+        		print alix.status('bot').ljust(8)[0:8] + '  ' + item['name'].ljust(32)[0:32] + '  ' + item['channel'].ljust(48)[0:48] + '  ' + item['cmd'].ljust(64)[0:64]
+	if cmd == 'status':
+		name = sys.argv[2]
+		print(alix.status(name))
 	elif cmd == 'stopAll':
         	alix.stopAll()
+	elif cmd == 'stop':
+		name = sys.argv[2]
+		alix.stop(name)
 	elif cmd == 'startAll':
         	alix.startAll()
+	elif cmd == 'start':
+		cmd = sys.argv[2]
+		alix.start(cmd)
 	elif cmd == 'restartAll':
         	alix.stopAll()
         	alix.startAll()
+	elif cmd == 'restart':
+		cmd = sys.argv[2]
+		alix.stop(cmd)
+		alix.start(cmd)
+	elif cmd == 'register':
+		name = sys.argv[2]
+		channel = sys.argv[3]
+		classPath = sys.argv[4]
+		description = sys.argv[5]
+		alix.register(name, channel, classPath, description)
+	elif cmd == 'unregister':
+		name = sys.argv[2]
+		alix.unregister(name)
+	elif cmd == 'getParams':
+		name = sys.argv[2]
+		print alix.getParams(name)
+	elif cmd == 'getParam':
+		name = sys.argv[2]
+		param = sys.argv[3]
+		print(alix.getParam(name, param))
+        elif cmd == 'setParam':
+                name = sys.argv[2]
+                param = sys.argv[3]
+		value = sys.argv[4]
+                alix.setParam(name, param, value)
+        elif cmd == 'delParam':
+                name = sys.argv[2]
+                param = sys.argv[3]
+		alix.delParam(name, param)
+	elif cmd == 'help':
+		""" help function """
+		print sys.modules[__name__].__dict__

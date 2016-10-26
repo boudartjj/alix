@@ -141,7 +141,7 @@ def status(name):
 	r.publish('alix:cmd:' + name, 'status')
 	time.sleep(0.1)
 	status = r.get('alix:status:' + name)
-	print status
+	return status
 
 def list():
         services = []
@@ -253,15 +253,3 @@ class Alix():
 
 	def onMessage(self, message):
 		return None
-
-if __name__ == "__main__":
-	cmd = sys.argv[1]
-	if cmd == "list":
-        	print list()
-	elif cmd == 'stopAll':
-        	stopAll()
-	elif cmd == 'startAll':
-        	startAll()
-	elif cmd == 'restartAll':
-        	stopAll()
-        	startAll()
