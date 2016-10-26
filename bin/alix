@@ -7,10 +7,10 @@ if __name__ == "__main__":
 	cmd = sys.argv[1]
 	if cmd == "list":
 		list = alix.list()
-		print 'STATUS'.ljust(8) + '  ' + 'SERVICE NAME'.ljust(32) + '  ' + 'CHANNEL'.ljust(48) + '  ' + 'SERVICE PATH'.ljust(64)
-		print '-'*8 + '-'*32 + '  ' + '-'*48 + '  ' + '-'*64
+		print 'STATUS'.ljust(12) + '  ' + 'SERVICE NAME'.ljust(32) + '  ' + 'CHANNEL'.ljust(48) + '  ' + 'SERVICE PATH'.ljust(64)
+		print '-'*12 + '  ' + '-'*32 + '  ' + '-'*48 + '  ' + '-'*64
 		for item in list:
-        		print alix.status('bot').ljust(8)[0:8] + '  ' + item['name'].ljust(32)[0:32] + '  ' + item['channel'].ljust(48)[0:48] + '  ' + item['cmd'].ljust(64)[0:64]
+        		print alix.status(item['name']).ljust(12)[0:12] + '  ' + item['name'].ljust(32)[0:32] + '  ' + item['channel'].ljust(48)[0:48] + '  ' + item['cmd'].ljust(64)[0:64]
 	if cmd == 'status':
 		name = sys.argv[2]
 		print(alix.status(name))
