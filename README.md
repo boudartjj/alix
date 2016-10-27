@@ -7,15 +7,15 @@ All classes that implements the Alix class:
 INSTALL ALIX
 - install Redis (http://redis.io/download)
 - type the following command: pip install https://github.com/boudartjj/alix/archive/v0.3-alpha.tar.gz
+- copy alix (https://github.com/boudartjj/alix/blob/master/bin/alix) to /usr/bin
 
 CREATE AND START A NEW MICRO SERVICE
-- copy the skeleton_ms.py (https://github.com/boudartjj/alix/tree/master/services) file and implement you code in the onMessage(message) method
+- create a folder for your micro services
+    - mkdir /home/myuser/alix
+- copy the skeleton_ms.py (https://github.com/boudartjj/alix/blob/master/services/skeleton_ms.py) file in your micro services folder and implement you code in the onMessage(message) method
     - cp skeleton_ms.py my_ms.py
     - implement your code in the onMessage method (see examples: https://github.com/boudartjj/alix/tree/master/services)
 - register, start and test your service
-    - start python
-    - in python:
-        - import alix
-        - alix.register('myMicroservice', 'myMicroservice:myMessage', '/home/alix/my_ms.py', 'this is a short description of my micro service')
-        - alix.start('myMicroservice')
-        - alix.sendMessage('myMicroservice:myMessage', 'Hello, World!'):
+        - alix register 'myMicroservice' 'myMicroservice:myMessage' '/home/myuser/alix/my_ms.py' 'this is a short description of my micro service')
+        - alix start 'myMicroservice'
+        - alix sendMessage 'myMicroservice:myMessage' 'Hello, World!'
