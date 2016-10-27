@@ -56,6 +56,10 @@ if __name__ == "__main__":
                 name = sys.argv[2]
                 param = sys.argv[3]
 		alix.delParam(name, param)
+	elif cmd == 'sendMessage':
+		channel = sys.argv[2]
+		message = sys.argv[3]
+		alix.sendMessage(channel, message)
 	elif cmd == 'help':
 		""" help function """
 		print sys.modules[__name__].__dict__
