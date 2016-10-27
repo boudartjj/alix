@@ -16,7 +16,7 @@ CREATE AND START A NEW MICRO SERVICE
     - cp skeleton_ms.py my_ms.py
     - implement your code in the onMessage method (see examples: https://github.com/boudartjj/alix/tree/master/services)
 - register, start and test your service
-    - alix register 'myMicroservice' 'myMicroservice:myMessage' '/home/myuser/alix/my_ms.py' 'this is a short description of my micro service')
+    - alix register 'myMicroservice' 'myMicroservice:myMessage' '/home/myuser/alix/my_ms.py' 'this is a short description of my micro service'
     - alix start 'myMicroservice'
     - alix list
     - alix sendMessage 'myMicroservice:myMessage' 'Hello, World!'
