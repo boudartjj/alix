@@ -26,6 +26,34 @@ def _delete(name):
 	r = redis.StrictRedis()
 	r.delete('alix:config:' + name)
 
+def exportConfig(name, path):
+	"""
+	export micro service config to file
+
+	args:
+		name: name of the micro service
+		path: config file path
+
+	example:
+		alix.exportConfig('myMicroservice', '/home/alix/myMicroservice.config')
+	"""
+	with open(path, 'w') as f:
+		json.dump(_load(name), f)
+
+def importConfig(path):
+	"""
+	import micro service config from file
+
+	args:
+		name: name of the microservice
+		path: config file pathi
+
+	example: 
+		alix.importConfig('myMicroservice', '/home/alix/myMicroservice.config')
+	"""
+	with open(path, 'r') as f:
+		_saveJSON(json.load(f))
+
 def register(name, channel, cmd, description=''):
 	"""
 	register new micro service

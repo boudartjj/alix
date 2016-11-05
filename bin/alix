@@ -60,6 +60,13 @@ if __name__ == "__main__":
 		channel = sys.argv[2]
 		message = sys.argv[3]
 		alix.sendMessage(channel, message)
+	elif cmd == 'exportConfig':
+		name = sys.argv[2]
+		path = sys.argv[3]
+		alix.exportConfig(name, path)
+	elif cmd == 'importConfig':
+		path = sys.argv[2]
+		alix.importConfig(path)
 	elif cmd == 'help':
 		""" help function """
 		print sys.modules[__name__].__dict__
