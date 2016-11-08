@@ -4,9 +4,6 @@ import sys
 from alix import Alix
 
 class MicroService(Alix):
-	def __init__(self, name):
-		Alix.__init__(self, name)
-
 	def onMessage(self, message):
 		#save error message into file
 		fo = open(self.getParam('path'), 'a')
