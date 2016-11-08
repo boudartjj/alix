@@ -4,8 +4,8 @@ import sys
 from alix import Alix
 
 class MicroService(Alix):
-	def __init__(self, name, channel):
-		Alix.__init__(self, name, channel)
+	def __init__(self, name):
+		Alix.__init__(self, name)
 
 	def onMessage(self, message):
 		#save error message into file
@@ -15,7 +15,5 @@ class MicroService(Alix):
 
 #get micro service name
 name = sys.argv[1]
-#get micro service channel
-channel = sys.argv[2]
 
-MicroService(name, channel).start()
+MicroService(name).start()

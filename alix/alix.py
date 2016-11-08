@@ -144,8 +144,7 @@ def unregister(name):
 
 def start(name):
         cmd = getCommand(name)
-	channel = getChannel(name)
-        p = Popen(['python', cmd, name, channel], stdout=subprocess.PIPE)
+        p = Popen(['python', cmd, name], stdout=subprocess.PIPE)
         print ("start " + name)
 
 def stop(name):
@@ -189,10 +188,10 @@ def _getErrorMesssage():
 	return repr(traceback.format_exception(exc_type, exc_value, exc_traceback))
 
 class Alix():
-	def __init__(self, name, channel):
+	def __init__(self, name):
 		self._active = False
 		self.name = name
-		self.channel = channel
+		self.channel = getChannel(name)
 
 	def isActive(self):
 		return self._active

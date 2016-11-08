@@ -2,8 +2,13 @@
 
 from alix import alix
 import sys
+import argparse
 
 if __name__ == "__main__":
+	parser = argparse.ArgumentParser(description='Alix command line')
+	parser.add_argument('list', help='registered micro services list')
+	args = parser.parse_args()
+
 	cmd = sys.argv[1]
 	if cmd == "list":
 		list = alix.list()
@@ -68,5 +73,7 @@ if __name__ == "__main__":
 		path = sys.argv[2]
 		alix.importConfig(path)
 	elif cmd == 'help':
-		""" help function """
-		print sys.modules[__name__].__dict__
+		print(help(sys.modules[__name__]))
+def xxx():
+	"""my function"""
+	print 'hello'
