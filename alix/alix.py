@@ -9,6 +9,7 @@ import threading
 import redis
 import time
 import json
+import imp
 
 def _save(name, channel, cmd, description):
 	_saveJSON({'name': name, 'cmd': cmd, 'channel': channel, 'description': description})
@@ -142,10 +143,20 @@ def unregister(name):
         stop(name)
 	_delete(name)
 
+#def start(name):
+#	t = threading.Thread(target=_start, args=(name, ))
+#	t.start()
+
 def start(name):
         cmd = getCommand(name)
-        p = Popen(['python', cmd, name], stdout=subprocess.PIPE)
-        print ("start " + name)
+        #p = Popen(['python', cmd, name], stdout=subprocess.PIPE)
+	fp, path, description = imp.find_module('telegram_bot_ms', ['/home/uplanet/uplanet/services'])
+	module = imp.load_module('telegram_bot_ms', fp, path, description)
+	fp.close()
+	svc = module.MicroService({'name' : 'bot'})
+	svc.setDaemon(True)
+	svc.start()
+        print ("start " + name)	
 
 def stop(name):
         r = redis.StrictRedis()
@@ -187,16 +198,17 @@ def _getErrorMesssage():
 	exc_type, exc_value, exc_traceback = sys.exc_info()
 	return repr(traceback.format_exception(exc_type, exc_value, exc_traceback))
 
-class Alix():
-	def __init__(self, name):
+class Alix(threading.Thread):
+	def __init__(self, kwargs={}):
+		threading.Thread.__init__(self)
 		self._active = False
-		self.name = name
-		self.channel = getChannel(name)
+		self.name = kwargs['name']
+		self.channel = getChannel(self.name)
 
 	def isActive(self):
 		return self._active
 
-	def start(self):
+	def run(self):
 		self._active = True
                 self._sendMessage('starting')
 

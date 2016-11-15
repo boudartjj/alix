@@ -5,9 +5,9 @@ import sys
 import argparse
 
 if __name__ == "__main__":
-	parser = argparse.ArgumentParser(description='Alix command line')
-	parser.add_argument('list', help='registered micro services list')
-	args = parser.parse_args()
+	#parser = argparse.ArgumentParser(description='Alix command line')
+	#parser.add_argument('list', help='registered micro services list')
+	#args = parser.parse_args()
 
 	cmd = sys.argv[1]
 	if cmd == "list":
@@ -27,15 +27,15 @@ if __name__ == "__main__":
 	elif cmd == 'startAll':
         	alix.startAll()
 	elif cmd == 'start':
-		cmd = sys.argv[2]
-		alix.start(cmd)
+		name = sys.argv[2]
+		alix.start(name)
 	elif cmd == 'restartAll':
         	alix.stopAll()
         	alix.startAll()
 	elif cmd == 'restart':
-		cmd = sys.argv[2]
-		alix.stop(cmd)
-		alix.start(cmd)
+		name = sys.argv[2]
+		alix.stop(name)
+		alix.start(name)
 	elif cmd == 'register':
 		name = sys.argv[2]
 		channel = sys.argv[3]
