@@ -6,12 +6,23 @@ All classes that implements the Alix class:
 
 INSTALL ALIX
 - install Redis (http://redis.io/download)
-- type the following commands:
-    - sudo su
-    - pip install https://github.com/boudartjj/alix/archive/v0.3-alpha.tar.gz
-    - wget https://raw.githubusercontent.com/boudartjj/alix/master/bin/alix
-    - chmod 755 alix
-    - mv alix /usr/bin
+- install alix:
+    -1- switch to root user
+        - sudo su
+    -2- install alix python package
+        - pip install https://github.com/boudartjj/alix/archive/v0.4-alpha.tar.gz
+    -3- install alix server
+        - wget https://raw.githubusercontent.com/boudartjj/alix/master/bin/alix-srv
+        - chmod 755 alix-srv
+        - mv alix-srv /usr/bin
+    -4- install alix daemon
+        - wget https://raw.githubusercontent.com/boudartjj/alix/master/bin/alixd
+        - chmod 755 alixd
+        - mv alixd /etc/init.d
+    -5- install alix cli
+        - wget https://raw.githubusercontent.com/boudartjj/alix/master/bin/alix
+        - chmod 755 alix
+        - mv alix /usr/bin
 
 CREATE AND START A NEW MICRO SERVICE
 - create a folder for your micro services
