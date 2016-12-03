@@ -12,10 +12,10 @@ if __name__ == "__main__":
 	cmd = sys.argv[1]
 	if cmd == "list":
 		list = alix.list()
-		print 'STATUS'.ljust(12) + '  ' + 'SERVICE NAME'.ljust(32) + '  ' + 'CHANNEL'.ljust(48) + '  ' + 'SERVICE PATH'.ljust(64)
+		print 'STATUS'.ljust(12) + '  ' + 'SERVICE NAME'.ljust(32) + '  ' + 'CHANNEL'.ljust(48) + '  ' + 'MODULE'.ljust(64)
 		print '-'*12 + '  ' + '-'*32 + '  ' + '-'*48 + '  ' + '-'*64
 		for item in list:
-        		print alix.status(item['name']).ljust(12)[0:12] + '  ' + item['name'].ljust(32)[0:32] + '  ' + item['channel'].ljust(48)[0:48] + '  ' + item['cmd'].ljust(64)[0:64]
+        		print alix.status(item['name']).ljust(12)[0:12] + '  ' + item['name'].ljust(32)[0:32] + '  ' + item['channel'].ljust(48)[0:48] + '  ' + item['modulePath'] + '/' + item['module'].ljust(64)[0:64]
 	if cmd == 'status':
 		name = sys.argv[2]
 		print(alix.status(name))
@@ -28,7 +28,8 @@ if __name__ == "__main__":
         	alix.startAll()
 	elif cmd == 'start':
 		name = sys.argv[2]
-		alix.start(name)
+		#alix.start(name)
+		alix.sendMessage('alix:cmd', 'start ' + name)
 	elif cmd == 'restartAll':
         	alix.stopAll()
         	alix.startAll()
@@ -74,6 +75,3 @@ if __name__ == "__main__":
 		alix.importConfig(path)
 	elif cmd == 'help':
 		print(help(sys.modules[__name__]))
-def xxx():
-	"""my function"""
-	print 'hello'

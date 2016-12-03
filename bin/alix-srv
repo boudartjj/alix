@@ -1,0 +1,34 @@
+#!/usr/bin/env python
+
+import redis
+import time
+import imp
+from alix import alix
+
+def run():
+	runningServices = {}
+	r = redis.StrictRedis()
+	p = r.pubsub()
+	p.subscribe('alix:cmd')
+
+	exit = False
+	while not exit:
+		event = p.get_message()
+		if event and event['type'] == 'message':
+			data = event['data']
+			print('cmd: ' + data)
+			data = data.split()
+			cmd = data[0]
+			if cmd == 'stop':
+				#stop all running services
+				for svcName in runningServices.keys():
+					svc = runningServices[svcName]
+					if svc.isAlive: alix.stop(svcName)		
+				exit = True
+			elif cmd == 'start':
+				svcName = data[1]
+				svc = alix.start(svcName)
+				runningServices[svcName] = svc
+		time.sleep(0.01)
+
+run()

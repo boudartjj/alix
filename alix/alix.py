@@ -11,8 +11,8 @@ import time
 import json
 import imp
 
-def _save(name, channel, cmd, description):
-	_saveJSON({'name': name, 'cmd': cmd, 'channel': channel, 'description': description})
+def _save(name, channel, module, modulePath, description):
+	_saveJSON({'name': name, 'module': module, 'modulePath': modulePath, 'channel': channel, 'description': description})
 
 def _saveJSON(svc):
 	name = svc['name']
@@ -55,39 +55,48 @@ def importConfig(path):
 	with open(path, 'r') as f:
 		_saveJSON(json.load(f))
 
-def register(name, channel, cmd, description=''):
+def register(name, channel, module, modulePath, description=''):
 	"""
 	register new micro service
 	
 	args:
 		name: name of the micro service
 		channel: name of the channel (* can be used as a wildcard) the micro service is listening
-		cmd: path to the python micro service path
+		module: name of the python micro service module
+		modulePath: path to the python micro service module
 		description: description of the micro service
 
 	example:
-		alix.register('myMicroservice', 'myMicroservice:myMessage', '/home/alix/my_ms.py', 'this is a short description of my micro service')
+		alix.register('myMicroservice', 'myMicroservice:myMessage', 'my_ms', '/home/alix', 'this is a short description of my micro service')
 	"""
-	_save(name, channel, cmd, description)
+	_save(name, channel, module, modulePath, description)
 
-def getCommand(name):
+def getModule(name):
 	"""
-	get the path to the micro service python file that is executed each time a message is published to the channel it is listening
+	get the microservice module name
 
 	args:
 		name: name of the micro service
 
 	returns:
-		path to the micro service python file that is executed each time a message is published to the channel it is listening
+		name of the microservice module that is executed each time a message is published to the channel it is listening
 
 	example: 
-		alix.getCommand('myMicroservice')
+		alix.getModule('myMicroservice')
 	"""
-	return _load(name)['cmd']
+	return _load(name)['module']
 
-def setCommand(name, command):
+def setModule(name, moduleName):
 	svc = _load(name)
-	svc['cmd'] = command
+	svc['module'] = moduleName
+	_saveJSON(svc)
+
+def getModulePath(name):
+	return _load(name)['modulePath']
+
+def setModulePath(name, modulePath):
+	svc = _load(name)
+	svc['modulePath'] = modulePath
 	_saveJSON(svc)
 
 def getChannel(name):
@@ -133,7 +142,7 @@ def delParam(name, param):
 
 def clone(sourceName, destinationName):
         r = redis.StrictRedis()
-        register(destinationName, getChannel(sourceName), getCommand(sourceName), getDescription(sourceName))
+        register(destinationName, getChannel(sourceName), getModule(sourceName), getModulePath(sourceName), getDescription(sourceName))
 
 def rename(sourceName, destinationName):
         clone(sourceName, destinationName)
@@ -143,25 +152,20 @@ def unregister(name):
         stop(name)
 	_delete(name)
 
-#def start(name):
-#	t = threading.Thread(target=_start, args=(name, ))
-#	t.start()
-
 def start(name):
-        cmd = getCommand(name)
-        #p = Popen(['python', cmd, name], stdout=subprocess.PIPE)
-	fp, path, description = imp.find_module('telegram_bot_ms', ['/home/uplanet/uplanet/services'])
-	module = imp.load_module('telegram_bot_ms', fp, path, description)
+	module = getModule(name)
+	modulePath = getModulePath(name)
+	fp, path, description = imp.find_module(module, [modulePath])
+	module = imp.load_module(module, fp, path, description)
 	fp.close()
-	svc = module.MicroService({'name' : 'bot'})
-	svc.setDaemon(True)
+	svc = module.MicroService({'name' : name})
+	#svc.setDaemon(True)
 	svc.start()
-        print ("start " + name)	
+	return svc
 
 def stop(name):
         r = redis.StrictRedis()
         r.publish('alix:cmd:' + name, 'stop')
-        print ("stop " + name)
 
 def stopAll():
 	services = list()
@@ -216,8 +220,8 @@ class Alix(threading.Thread):
 		tProcess.start()
 		tListner = threading.Thread(target = self._listen)
 		tListner.start()
-		tPing = threading.Thread(target = self._ping)
-                tPing.start()
+		#tPing = threading.Thread(target = self._ping)
+                #tPing.start()
 
 		self._sendMessage('started')
 
