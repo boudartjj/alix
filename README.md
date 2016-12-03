@@ -7,19 +7,19 @@ All classes that implements the Alix class:
 INSTALL ALIX
 - install Redis (http://redis.io/download)
 - install alix:
-    -1- switch to root user
+    - switch to root user
         - sudo su
-    -2- install alix python package
+    - install alix python package
         - pip install https://github.com/boudartjj/alix/archive/v0.4-alpha.tar.gz
-    -3- install alix server
+    - install alix server
         - wget https://raw.githubusercontent.com/boudartjj/alix/master/bin/alix-srv
         - chmod 755 alix-srv
         - mv alix-srv /usr/bin
-    -4- install alix daemon
+    - install alix daemon
         - wget https://raw.githubusercontent.com/boudartjj/alix/master/bin/alixd
         - chmod 755 alixd
         - mv alixd /etc/init.d
-    -5- install alix cli
+    - install alix cli
         - wget https://raw.githubusercontent.com/boudartjj/alix/master/bin/alix
         - chmod 755 alix
         - mv alix /usr/bin
