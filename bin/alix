@@ -28,7 +28,7 @@ if __name__ == "__main__":
         	alix.startAll()
 	elif cmd == 'start':
 		name = sys.argv[2]
-		#alix.start(name)
+		#send the start message to alix-srv
 		alix.sendMessage('alix:cmd', 'start ' + name)
 	elif cmd == 'restartAll':
         	alix.stopAll()
@@ -40,9 +40,10 @@ if __name__ == "__main__":
 	elif cmd == 'register':
 		name = sys.argv[2]
 		channel = sys.argv[3]
-		classPath = sys.argv[4]
-		description = sys.argv[5]
-		alix.register(name, channel, classPath, description)
+		module = sys.argv[4]
+		modulePath = sys.argv[5]
+		description = sys.argv[6]
+		alix.register(name, channel, module, modulePath, description)
 	elif cmd == 'unregister':
 		name = sys.argv[2]
 		alix.unregister(name)
