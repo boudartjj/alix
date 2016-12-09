@@ -29,14 +29,12 @@ if __name__ == "__main__":
 	elif cmd == 'start':
 		name = sys.argv[2]
 		#send the start message to alix-srv
-		alix.sendMessage('alix:cmd', 'start ' + name)
+		alix.sendMessage('alix:cmd', 'startService ' + name)
 	elif cmd == 'restartAll':
-        	alix.stopAll()
-        	alix.startAll()
+		alix.sendMessage('alix:cmd', 'restartServices')
 	elif cmd == 'restart':
 		name = sys.argv[2]
-		alix.stop(name)
-		alix.start(name)
+		alix.sendMessage('alix:cmd', 'restartService ' + name)
 	elif cmd == 'register':
 		name = sys.argv[2]
 		channel = sys.argv[3]
@@ -74,5 +72,13 @@ if __name__ == "__main__":
 	elif cmd == 'importConfig':
 		path = sys.argv[2]
 		alix.importConfig(path)
+	elif cmd == 'clone':
+		sourceName = sys.argv[2]
+		destName = sys.argv[3]
+		alix.clone(sourceName, destName)
+	elif cmd == 'rename':
+		sourceName = sys.argv[2]
+		destName = sys.argv[3]
+		alix.rename(sourceName, destName)
 	elif cmd == 'help':
 		print(help(sys.modules[__name__]))

@@ -19,16 +19,30 @@ def run():
 			print('cmd: ' + data)
 			data = data.split()
 			cmd = data[0]
-			if cmd == 'stop':
+			if cmd == 'stopServer':
 				#stop all running services
 				for svcName in runningServices.keys():
 					svc = runningServices[svcName]
-					if svc.isAlive: alix.stop(svcName)		
+					if svc.isAlive: svc.stop() #alix.stop(svcName)		
 				exit = True
-			elif cmd == 'start':
+			elif cmd == 'startService':
 				svcName = data[1]
 				svc = alix.start(svcName)
-				runningServices[svcName] = svc
+				if svcName not in runningServices: runningServices[svcName] = svc
+			elif cmd == 'restartService':
+				svcName = data[1]
+				if svcName in runningServices:
+					svc = runningServices[svcName]
+					svc.stop()
+				#alix.stop(svcName)
+				svc = alix.start(svcName)
+				if svcName not in runningServices: runningServices[svcName] = svc
+			elif cmd == 'restartAllServices':
+				for svcName in runningServices.keys():
+					svc = runningServices[svcName]
+					if svc.isAlive:
+						alix.stop(svcName)
+						alix.start(svcName)
 		time.sleep(0.01)
 
 run()

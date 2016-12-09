@@ -179,7 +179,7 @@ def startAll():
 
 def status(name):
         r = redis.StrictRedis()
-	r.set('alix:status:' + name, 'not active')
+	r.set('alix:status:' + name, 'stopped')
 	r.publish('alix:cmd:' + name, 'status')
 	time.sleep(0.1)
 	status = r.get('alix:status:' + name)
@@ -248,7 +248,7 @@ class Alix(threading.Thread):
                         	if cmd == 'stop':
                                 	self.stop()
                         	elif cmd == 'status':
-					r.set('alix:status:' + self.name, 'active')
+					r.set('alix:status:' + self.name, 'running')
                                 	self._sendMessage('active')
                 	time.sleep(0.1)
 		p.close()
@@ -263,7 +263,7 @@ class Alix(threading.Thread):
 		while self.isActive():
                         event = p.get_message()
                         if event and event['type'] == 'message':
-                        	self._sendMessage('active')
+                        	self._sendMessage('running')
                         time.sleep(0.1)
 		p.close()
 		self._sendMessage('ping off')
