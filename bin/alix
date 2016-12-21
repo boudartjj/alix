@@ -12,10 +12,10 @@ if __name__ == "__main__":
 	cmd = sys.argv[1]
 	if cmd == "list":
 		list = alix.list()
-		print 'STATUS'.ljust(12) + '  ' + 'SERVICE NAME'.ljust(32) + '  ' + 'CHANNEL'.ljust(48) + '  ' + 'MODULE'.ljust(64)
-		print '-'*12 + '  ' + '-'*32 + '  ' + '-'*48 + '  ' + '-'*64
+		print 'STATUS'.ljust(7) + '  ' + 'SERVICE NAME'.ljust(32) + '  ' + 'CHANNEL'.ljust(48) + '  ' + 'MODULE'.ljust(64)
+		print '-'*7 + '  ' + '-'*32 + '  ' + '-'*48 + '  ' + '-'*64
 		for item in list:
-        		print alix.status(item['name']).ljust(12)[0:12] + '  ' + item['name'].ljust(32)[0:32] + '  ' + item['channel'].ljust(48)[0:48] + '  ' + item['modulePath'] + '/' + item['module'].ljust(64)[0:64]
+        		print alix.status(item['name']).ljust(7)[0:7] + '  ' + item['name'].ljust(32)[0:32] + '  ' + item['channel'].ljust(48)[0:48] + '  ' + item['modulePath'] + '/' + item['module'].ljust(64)[0:64]
 	if cmd == 'status':
 		name = sys.argv[2]
 		print(alix.status(name))
@@ -45,6 +45,27 @@ if __name__ == "__main__":
 	elif cmd == 'unregister':
 		name = sys.argv[2]
 		alix.unregister(name)
+	elif cmd == 'getChannel':
+		name = sys.argv[2]
+		print alix.getChannel(name)
+	elif cmd == 'setChannel':
+		name = sys.argv[2]
+		value = sys.argv[3]
+		alix.setChannel(name, value)
+	elif cmd == 'getModule':
+		name = sys.argv[2]
+		print alix.getModule(name)
+	elif cmd == 'setModule':
+		name = sys.argv[2]
+		value = sys.argv[3]
+		alix.setModule(name, value)
+	elif cmd == 'getModulePath':
+		name = sys.argv[2]
+		print alix.getModulePath(name)
+	elif cmd == 'setModulePath':
+		name = sys.argv[2]
+		value = sys.argv[3]
+		alix.setModulePath(name, value)
 	elif cmd == 'getParams':
 		name = sys.argv[2]
 		print alix.getParams(name)
@@ -82,3 +103,5 @@ if __name__ == "__main__":
 		alix.rename(sourceName, destName)
 	elif cmd == 'help':
 		print(help(sys.modules[__name__]))
+	else:
+		print 'Invalid command. Type help to get command list.'
