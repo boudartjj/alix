@@ -4,47 +4,108 @@ from alix import alix
 import sys
 import argparse
 
+def help_():
+	print
+	print('Usage: alix COMMAND')
+	print
+	print('Commands')
+	print('  list           get services list')
+	print('  info           get service info')
+	print('  status         get service status')
+	print('  start          start service')
+	print('  stop           stop service')
+	print('  register       register new service')
+	print('  unregister     unregister service')
+	print('  getParams      get service parameters')
+	print('  getParam       get service parameter')
+	print('  setParam       set service parameter')
+	print('  delParam       delete service parameter')
+	print('  help           get help')
+
 if __name__ == "__main__":
 	#parser = argparse.ArgumentParser(description='Alix command line')
 	#parser.add_argument('list', help='registered micro services list')
 	#args = parser.parse_args()
 
-	cmd = sys.argv[1]
+	if len(sys.argv) <= 1: 
+		cmd = 'help'
+	else:
+		cmd = sys.argv[1]
+
 	if cmd == "list":
 		list = alix.list()
-		print 'STATUS'.ljust(7) + '  ' + 'SERVICE NAME'.ljust(32) + '  ' + 'CHANNEL'.ljust(48) + '  ' + 'MODULE'.ljust(64)
-		print '-'*7 + '  ' + '-'*32 + '  ' + '-'*48 + '  ' + '-'*64
+		print 'STATUS'.ljust(7) + '  ' + 'SERVICE NAME'.ljust(32) + '  ' + 'CHANNEL'.ljust(48) + '  ' + 'PARAMS'.ljust(6)
+		print '-'*7 + '  ' + '-'*32 + '  ' + '-'*48 + '  ' + '-'*6
 		for item in list:
-        		print alix.status(item['name']).ljust(7)[0:7] + '  ' + item['name'].ljust(32)[0:32] + '  ' + item['channel'].ljust(48)[0:48] + '  ' + item['modulePath'] + '/' + item['module'].ljust(64)[0:64]
-	if cmd == 'status':
-		name = sys.argv[2]
-		print(alix.status(name))
+        		print alix.status(item['name']).ljust(7)[0:7] + '  ' + item['name'].ljust(32)[0:32] + '  ' + item['channel'].ljust(48)[0:48] + '  ' + str(item.has_key('params') and len(item['params']) > 0).ljust(6)[0:6]
+	elif cmd == 'info':
+		if len(sys.argv) == 3:
+			name = sys.argv[2]
+			print('service name   ' + name)
+			print('description    ' + alix.getDescription(name))
+			print('status         ' + alix.status(name))
+			print('channel        ' + alix.getChannel(name))
+			print('module         ' + alix.getModule(name))
+			print('module path    ' + alix.getModulePath(name))
+			print('service params ' + str(alix.getParams(name)))
+		else:
+			print
+			print ('Usage: alix info [service_name]')
+			print
+	elif cmd == 'status':
+		if len(sys.argv) == 3:
+			name = sys.argv[2]
+			print(alix.status(name))
+		else:
+			print
+			print('Usage: alix status [service_name]')
+			print
 	elif cmd == 'stopAll':
         	alix.stopAll()
 	elif cmd == 'stop':
-		name = sys.argv[2]
-		alix.stop(name)
+		if len(sys.argv) == 3:
+			name = sys.argv[2]
+			alix.stop(name)
+		else :
+			print
+			print('Usage: alix stop [service_name]')
+			print
 	elif cmd == 'startAll':
         	alix.startAll()
 	elif cmd == 'start':
-		name = sys.argv[2]
-		#send the start message to alix-srv
-		alix.sendMessage('alix:cmd', 'startService ' + name)
+		if len(sys.argv) == 3:
+			name = sys.argv[2]
+			#send the start message to alix-srv
+			alix.sendMessage('alix:cmd', 'startService ' + name)
+		else:
+			print
+			print('Usage: alix start [service_name]')
+			print
 	elif cmd == 'restartAll':
 		alix.sendMessage('alix:cmd', 'restartServices')
 	elif cmd == 'restart':
 		name = sys.argv[2]
 		alix.sendMessage('alix:cmd', 'restartService ' + name)
 	elif cmd == 'register':
-		name = sys.argv[2]
-		channel = sys.argv[3]
-		module = sys.argv[4]
-		modulePath = sys.argv[5]
-		description = sys.argv[6]
-		alix.register(name, channel, module, modulePath, description)
+		if len(sys.argv) == 7:
+			name = sys.argv[2]
+			channel = sys.argv[3]
+			module = sys.argv[4]
+			modulePath = sys.argv[5]
+			description = sys.argv[6]
+			alix.register(name, channel, module, modulePath, description)
+		else:
+			print
+			print('Usage: alix register [service_name] [channel] [module_name] [module_path] [description]')
+			print
 	elif cmd == 'unregister':
-		name = sys.argv[2]
-		alix.unregister(name)
+		if len(sys.argv) == 3:
+			name = sys.argv[2]
+			alix.unregister(name)
+		else:
+			print
+			print ('Usage: alix unregister [service_name]')
+			print
 	elif cmd == 'getChannel':
 		name = sys.argv[2]
 		print alix.getChannel(name)
@@ -67,21 +128,41 @@ if __name__ == "__main__":
 		value = sys.argv[3]
 		alix.setModulePath(name, value)
 	elif cmd == 'getParams':
-		name = sys.argv[2]
-		print alix.getParams(name)
+		if len(sys.argv) == 3:
+			name = sys.argv[2]
+			print alix.getParams(name)
+		else:
+			print
+			print('Usage: alix getParams [service_name]')
+			print
 	elif cmd == 'getParam':
-		name = sys.argv[2]
-		param = sys.argv[3]
-		print(alix.getParam(name, param))
+		if len(sys.argv) == 4:
+			name = sys.argv[2]
+			param = sys.argv[3]
+			print(alix.getParam(name, param))
+		else:
+			print
+			print('Usage: alix getParam [service_name] [param_name]')
+			print
         elif cmd == 'setParam':
-                name = sys.argv[2]
-                param = sys.argv[3]
-		value = sys.argv[4]
-                alix.setParam(name, param, value)
+		if len(sys.argv) == 5:
+                	name = sys.argv[2]
+                	param = sys.argv[3]
+			value = sys.argv[4]
+                	alix.setParam(name, param, value)
+		else:
+			print
+			print('Usage: alix setParam [service_name] [param_name] [param_value]')
+			print
         elif cmd == 'delParam':
-                name = sys.argv[2]
-                param = sys.argv[3]
-		alix.delParam(name, param)
+		if len(sys.argv) == 4:
+                	name = sys.argv[2]
+                	param = sys.argv[3]
+			alix.delParam(name, param)
+		else:
+			print
+			print('Usage delParam [service_name] [param_name]')
+			print
 	elif cmd == 'sendMessage':
 		channel = sys.argv[2]
 		message = sys.argv[3]
@@ -102,6 +183,6 @@ if __name__ == "__main__":
 		destName = sys.argv[3]
 		alix.rename(sourceName, destName)
 	elif cmd == 'help':
-		print(help(sys.modules[__name__]))
+		help_()
 	else:
 		print 'Invalid command. Type help to get command list.'
