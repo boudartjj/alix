@@ -84,7 +84,7 @@ def getModule(name):
 	example: 
 		alix.getModule('myMicroservice')
 	"""
-	return _load(name)['module']
+	return _load(name).get('module')
 
 def setModule(name, moduleName):
 	svc = _load(name)
@@ -92,7 +92,7 @@ def setModule(name, moduleName):
 	_saveJSON(svc)
 
 def getModulePath(name):
-	return _load(name)['modulePath']
+	return _load(name).get('modulePath')
 
 def setModulePath(name, modulePath):
 	svc = _load(name)
@@ -100,15 +100,26 @@ def setModulePath(name, modulePath):
 	_saveJSON(svc)
 
 def getChannel(name):
-	return _load(name)['channel']
+	return _load(name).get('channel')
 
 def setChannel(name, channel):
         svc = _load(name)
         svc['channel'] = channel
      	_saveJSON(svc)
 
+def getOutputChannel(name):
+	return _load(name).get('outputChannel')
+
+def setOutputChannel(name, channel):
+	svc = _load(name)
+	if(len(channel.strip()) > 0):
+		svc['outputChannel'] = channel
+	else:
+		svc['outputChannel'] = None
+	_saveJSON(svc)
+
 def getDescription(name):
-	return _load(name)['description']
+	return _load(name).get('description')
 
 def setDescription(name, description):
         svc = _load(name)
@@ -120,12 +131,12 @@ def getParams(name):
 	if not 'params' in svc.keys():
 		svc['params'] = {}
 		_saveJSON(svc)
-	return _load(name)['params']	
+	return _load(name).get('params')	
 
 def getParam(name, param):
 	paramValue = None
 	params = getParams(name)
-	if param in params: paramValue = params[param]
+	if param in params: paramValue = params.get(param)
 	return paramValue
 
 def setParam(name, param, value):
@@ -286,7 +297,9 @@ class Alix(threading.Thread):
 				self._sendMessage(json.dumps({'timestamp': time.strftime('%Y%m%d%H%M%S', time.gmtime()), 'Type': 'message received', 'name': self.name , 'message': str(event)}))
 			if event and event['type'] == 'pmessage':
 				try: 
-					self.onMessage(event['data'])
+					output = self.onMessage(event['data'])
+					if output is not None and getOutputChannel(self.name) is not None:
+						sendMessage(getOutputChannel(self.name), output)
 				except Exception as e:
 					strNow = time.strftime('%Y%m%d%H%M%S', time.gmtime()) 
 					sendMessage('alix:err:' + self.name, json.dumps({'timestamp':strNow, 'serviceName':self.name, 'errorMessage': _getErrorMesssage()}))

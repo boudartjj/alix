@@ -2,30 +2,36 @@
 
 from alix import alix
 import sys
-import argparse
 
 def help_():
 	print
 	print('Usage: alix COMMAND')
 	print
 	print('Commands')
-	print('  list           get services list')
-	print('  info           get service info')
-	print('  status         get service status')
-	print('  start          start service')
-	print('  stop           stop service')
-	print('  register       register new service')
-	print('  unregister     unregister service')
-	print('  getParams      get service parameters')
-	print('  getParam       get service parameter')
-	print('  setParam       set service parameter')
-	print('  delParam       delete service parameter')
-	print('  help           get help')
+	print('  list              get services list')
+	print('  info              get service info')
+	print('  status            get service status')
+	print('  start             start service')
+	print('  stop              stop service')
+	print('  register          register new service')
+	print('  unregister        unregister service')
+	print('  getChannel        get service listening channel')
+	print('  setChannel        set service listening channel')
+	print('  getOutputChannel  get service output channel')
+	print('  setOutputChannel  set service output channel')
+	print('  getModule         get service module name')
+	print('  setModule         set service module name')
+	print('  getModulePath     get service module path')
+	print('  setModulePath     set service module path')
+	print('  getParams         get service parameters')
+	print('  getParam          get service parameter')
+	print('  setParam          set service parameter')
+	print('  delParam          delete service parameter')
+	print('  clone             clone service')
+	print('  rename            rename service')
+	print('  help              get help')
 
 if __name__ == "__main__":
-	#parser = argparse.ArgumentParser(description='Alix command line')
-	#parser.add_argument('list', help='registered micro services list')
-	#args = parser.parse_args()
 
 	if len(sys.argv) <= 1: 
 		cmd = 'help'
@@ -41,13 +47,16 @@ if __name__ == "__main__":
 	elif cmd == 'info':
 		if len(sys.argv) == 3:
 			name = sys.argv[2]
-			print('service name   ' + name)
-			print('description    ' + alix.getDescription(name))
-			print('status         ' + alix.status(name))
-			print('channel        ' + alix.getChannel(name))
-			print('module         ' + alix.getModule(name))
-			print('module path    ' + alix.getModulePath(name))
-			print('service params ' + str(alix.getParams(name)))
+			print
+			print('SERVICE NAME   ' + name)
+			print('DESCRIPTION    ' + str(alix.getDescription(name)))
+			print('STATUS         ' + str(alix.status(name)))
+			print('CHANNEL        ' + str(alix.getChannel(name)))
+			print('OUTPUT CHANNEL ' + str(alix.getOutputChannel(name)))
+			print('MODULE         ' + str(alix.getModule(name)))
+			print('MODULE PATH    ' + str(alix.getModulePath(name)))
+			print('SERVICE PARAMS ' + str(alix.getParams(name)))
+			print
 		else:
 			print
 			print ('Usage: alix info [service_name]')
@@ -113,6 +122,23 @@ if __name__ == "__main__":
 		name = sys.argv[2]
 		value = sys.argv[3]
 		alix.setChannel(name, value)
+	elif cmd == 'getOutputChannel':
+		if len(sys.argv) == 3:
+			name = sys.argv[2]
+			print alix.getOutputChannel(name)
+		else:
+			print
+			print ('Usage: alix getOutputChannel [service_name]')
+			print
+	elif cmd == 'setOutputChannel':
+		if len(sys.argv) == 4:
+			name = sys.argv[2]
+			value = sys.argv[3]
+			alix.setOutputChannel(name, value)
+		else:
+			print
+			print ('Usage: setOutputChannel [service_name] [output_channel]')
+			print
 	elif cmd == 'getModule':
 		name = sys.argv[2]
 		print alix.getModule(name)

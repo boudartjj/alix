@@ -18,7 +18,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='alix',
-    version='0.4',
+    version='0.5',
     description='Alix the tiny micro services for Python',
     long_description=long_description,
     url='https://github.com/boudartjj/alix',

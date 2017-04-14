@@ -15,7 +15,7 @@ class TestAlixMethods(unittest.TestCase):
 		fo.write('from alix import Alix\n')
 		fo.write('class MicroService(Alix):\n')
 		fo.write('\tdef onMessage(self, message):\n')
-		fo.write('\t\tif message == \'ping\': alix.sendMessage(\'pong\')\n')
+		fo.write('\t\tif message == \'ping\': alix.sendMessage(\'alix:test\', \'pong\')\n')
 		fo.close()
 
 		#register service
