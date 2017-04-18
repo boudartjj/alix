@@ -10,7 +10,7 @@ INSTALL ALIX
     - switch to root user
         - sudo su
     - install alix python package
-        - pip install https://github.com/boudartjj/alix/archive/v0.4-alpha.tar.gz
+        - pip install https://github.com/boudartjj/alix/archive/v0.5-alpha.tar.gz
     - install alix server
         - wget https://raw.githubusercontent.com/boudartjj/alix/master/bin/alix-srv
         - chmod 755 alix-srv
