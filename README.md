@@ -5,8 +5,8 @@ All classes that implements the Alix class:
 - send to the output channel the content parameter from the onMessage method
 - are supported by the Alix platform (list, start, stop, info... use alix help to get commands list)
 
-INSTALL ALIX
-- install Redis (http://redis.io/download)
+INSTALL ALIX on Linux
+- install Redis (standard installation http://redis.io/download or Docker https://hub.docker.com/_/redis/)
 - install alix:
     - switch to root user
         - sudo su
