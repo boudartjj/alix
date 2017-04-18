@@ -23,6 +23,8 @@ def help_():
 	print('  setModule         set service module name')
 	print('  getModulePath     get service module path')
 	print('  setModulePath     set service module path')
+	print('  getDescription    get service description')
+	print('  setDescription    set service description')
 	print('  getParams         get service parameters')
 	print('  getParam          get service parameter')
 	print('  setParam          set service parameter')
@@ -55,6 +57,7 @@ if __name__ == "__main__":
 			print('OUTPUT CHANNEL ' + str(alix.getOutputChannel(name)))
 			print('MODULE         ' + str(alix.getModule(name)))
 			print('MODULE PATH    ' + str(alix.getModulePath(name)))
+			print('FULL PATH      ' + str(alix.getModulePath(name)) + '/' + str(alix.getModule(name)) + '.py')
 			print('SERVICE PARAMS ' + str(alix.getParams(name)))
 			print
 		else:
@@ -114,6 +117,23 @@ if __name__ == "__main__":
 		else:
 			print
 			print ('Usage: alix unregister [service_name]')
+			print
+	elif cmd == 'getDescription':
+		if len(sys.argv) == 3:
+			name = sys.argv[2]
+			print(alix.getDescription(name))
+		else:
+			print
+			print ('Usage: alix getDescription [service_name]')
+			print
+	elif cmd == 'setDescription':
+		if len(sys.argv) == 4:
+			name = sys.argv[2]
+			description = sys.argv[3]
+			alix.setDescription(name, description)
+		else:
+			print
+			print('Usage: alix setDescription [service_name] [description]')
 			print
 	elif cmd == 'getChannel':
 		name = sys.argv[2]
