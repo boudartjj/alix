@@ -1,5 +1,5 @@
-# Alix, the tiny micro service platform for Python
-Alix is a very simple micro services Python platform for Linux. It is a publish-subscribe micro service architecture based on the Redis message broker.
+# Alix, the tiny microservice platform for Python
+Alix is a very simple microservices Python platform for Linux. It is a publish-subscribe microservice architecture based on the Redis message broker.
 All classes that implements the Alix class:
 - have the onMessage method executed each time a message is sent to the channel they are listening to
 - send to the output channel the content parameter from the onMessage method
@@ -25,16 +25,16 @@ INSTALL ALIX on Linux
         - chmod 755 alix
         - mv alix /usr/bin
 
-CREATE AND START A NEW MICRO SERVICE
+CREATE AND START A NEW MICROSERVICE
 - start alix daemon
     - service alixd start
-- create a folder for your micro services
+- create a folder for your microservices
     - mkdir /home/myuser/alix
-- copy the skeleton_ms.py (https://github.com/boudartjj/alix/blob/master/services/skeleton_ms.py) file in your micro services folder and implement you code in the onMessage(message) method
+- copy the skeleton_ms.py (https://github.com/boudartjj/alix/blob/master/services/skeleton_ms.py) file in your microservices folder and implement you code in the onMessage(message) method
     - cp skeleton_ms.py my_ms.py
     - implement your code in the onMessage method (see examples: https://github.com/boudartjj/alix/tree/master/services)
 - register, start and test your service
-    - alix register 'myMicroservice' 'myMicroservice:myMessage' 'my_ms', '/home/myuser/alix' 'this is a short description of my micro service'
+    - alix register 'myMicroservice' 'myMicroservice:myMessage' 'my_ms', '/home/myuser/alix' 'this is a short description of my microservice'
     - alix start 'myMicroservice'
     - alix list
     - alix sendMessage 'myMicroservice:myMessage' 'Hello, World!'
