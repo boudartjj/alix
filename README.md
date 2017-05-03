@@ -5,16 +5,17 @@ All classes that implements the Alix class:
 - have the onMessage method executed each time a message is sent to the channel they are listening to
 - send to the output channel the return value of the onMessage method
 - are supported by the Alix platform (list, start, stop, info... use alix help to get commands list)
+
 With Alix creating a micro service is as simple as that:
 --------------------------------------------------------
 ```
 class MicroService(Alix):
     #onMessage is executed each time a message is sent to the channel the service is listening to
-	def onMessage(self, message):
-		#implement your code here
+    def onMessage(self, message):
+        #implement your code here
         
         #the return value will be sent to the output channel of the service
-		return "my output message"
+        return "my output message"
 ```
 
 INSTALL ALIX
