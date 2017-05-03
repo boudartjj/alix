@@ -22,10 +22,11 @@ class MicroService(Alix):
 
 - register, start and test your service
 ```
-    alix register 'ping' 'pinginputchannel' 'ping_ms', '/home/myuser/alix' 'this is ping micro service'
-    alix start 'ping'
+    alix register ping pinginputchannel ping_ms /home/myuser/alix "this is ping micro service"
+    alix start ping
+    alix info ping
     alix list
-    alix sendMessage 'pinginputchannel' 'my message'
+    alix sendMessage pinginputchannel "my message"
 ```
 
 INSTALL ALIX
