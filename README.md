@@ -3,7 +3,7 @@ Alix, the tiny microservice platform for Python
 Alix is a very simple microservices Python platform for Linux. It is a publish-subscribe microservice architecture based on the Redis message broker.
 All classes that implements the Alix class:
 - have the onMessage method executed each time a message is sent to the channel they are listening to
-- send to the output channel the content parameter from the onMessage method
+- send to the output channel the return value of the onMessage method
 - are supported by the Alix platform (list, start, stop, info... use alix help to get commands list)
 
 INSTALL ALIX on Linux
