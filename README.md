@@ -20,12 +20,12 @@ class MicroService(Alix):
         return "pong " + message
 ```
 
-- register and start your ping service
+- register, start and test your service
 ```
-    alix register 'ping' 'pingchannel' 'ping_ms', '/home/myuser/alix' 'this is ping micro service'
+    alix register 'ping' 'pinginputchannel' 'ping_ms', '/home/myuser/alix' 'this is ping micro service'
     alix start 'ping'
     alix list
-    alix sendMessage 'pingchannel' 'my message'
+    alix sendMessage 'pinginputchannel' 'my message'
 ```
 
 INSTALL ALIX
