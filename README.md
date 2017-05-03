@@ -9,13 +9,23 @@ All classes that implements the Alix class:
 With Alix creating a micro service is as simple as that:
 --------------------------------------------------------
 ```
+ping_ms.py
+
+from alix import Alix
 class MicroService(Alix):
     #onMessage is executed each time a message is sent to the channel the service is listening to
     def onMessage(self, message):
         #implement your code here
         
         #the return value will be sent to the output channel of the service
-        return "my output message"
+        return "pong " + message
+```
+
+```
+    alix register 'ping' 'pingchannel' 'ping_ms', '/home/myuser/alix' 'this is ping micro service'
+    alix start 'ping'
+    alix list
+    alix sendMessage 'pingchannel' 'my message'
 ```
 
 INSTALL ALIX
