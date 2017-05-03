@@ -30,8 +30,8 @@ class MicroService(Alix):
     alix sendMessage ping_input_channel "my message"
 ```
 
-INSTALL ALIX
-------------
+Install Alix (Linux version)
+----------------------------
 - install Redis (standard installation http://redis.io/download or Docker https://hub.docker.com/_/redis/)
 - switch to root user
 ```
