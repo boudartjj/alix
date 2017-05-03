@@ -30,12 +30,19 @@ INSTALL ALIX on Linux
 CREATE AND START A NEW MICROSERVICE
 -----------------------------------
 - start alix daemon
-    - service alixd start
+```
+    service alixd start
+```
 - create a folder for your microservices
-    - mkdir /home/myuser/alix
+```
+    mkdir /home/myuser/alix
+```
 - copy the skeleton_ms.py (https://github.com/boudartjj/alix/blob/master/services/skeleton_ms.py) file in your microservices folder and implement you code in the onMessage(message) method
-    - cp skeleton_ms.py my_ms.py
-    - implement your code in the onMessage method (see examples: https://github.com/boudartjj/alix/tree/master/services)
+```
+    cp skeleton_ms.py my_ms.py
+```
+- implement your code in the onMessage method (see examples: https://github.com/boudartjj/alix/tree/master/services)
+ 
 - register, start and test your service
 ```
     alix register 'myMicroservice' 'myMicroservice:myMessage' 'my_ms', '/home/myuser/alix' 'this is a short description of my microservice'
