@@ -9,31 +9,32 @@ All classes that implements the Alix class:
 INSTALL ALIX on Linux
 ---------------------
 - install Redis (standard installation http://redis.io/download or Docker https://hub.docker.com/_/redis/)
-- install alix:
-    - switch to root user
+- switch to root user
 ```
-        sudo su
+    sudo su
 ```
-    - install alix python package
+- install alix python package
 ```
-        pip install https://github.com/boudartjj/alix/archive/v0.5-alpha.tar.gz
+    pip install https://github.com/boudartjj/alix/archive/v0.5-alpha.tar.gz
 ```
-    - install alix server
+- install alix server
 ```
-        wget https://raw.githubusercontent.com/boudartjj/alix/master/bin/alix-srv
-        chmod 755 alix-srv
-        mv alix-srv /usr/bin
+    wget https://raw.githubusercontent.com/boudartjj/alix/master/bin/alix-srv
+    chmod 755 alix-srv
+    mv alix-srv /usr/bin
 ```
-    - install alix daemon
+- install alix daemon
 ```
-        wget https://raw.githubusercontent.com/boudartjj/alix/master/bin/alixd
-        chmod 755 alixd
-        mv alixd /etc/init.d
+    wget https://raw.githubusercontent.com/boudartjj/alix/master/bin/alixd
+    chmod 755 alixd
+    mv alixd /etc/init.d
 ```
-    - install alix cli
-        - wget https://raw.githubusercontent.com/boudartjj/alix/master/bin/alix
-        - chmod 755 alix
-        - mv alix /usr/bin
+- install alix cli
+```
+    wget https://raw.githubusercontent.com/boudartjj/alix/master/bin/alix
+    chmod 755 alix
+    mv alix /usr/bin
+```
 
 CREATE AND START A NEW MICROSERVICE
 -----------------------------------
