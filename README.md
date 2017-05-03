@@ -47,19 +47,16 @@ Install Alix (Linux version)
     chmod 755 alix-srv
     mv alix-srv /usr/bin
 ```
-- install alix daemon
+- install and start alix daemon
 ```
     wget https://raw.githubusercontent.com/boudartjj/alix/master/bin/alixd
     chmod 755 alixd
     mv alixd /etc/init.d
+    service alixd start
 ```
 - install alix cli
 ```
     wget https://raw.githubusercontent.com/boudartjj/alix/master/bin/alix
     chmod 755 alix
     mv alix /usr/bin
-```
-- start alix daemon
-```
-    service alixd start
 ```
