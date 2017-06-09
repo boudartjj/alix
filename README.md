@@ -9,7 +9,7 @@ All classes that implements the Alix class:
 With Alix creating a micro service is as simple as that:
 --------------------------------------------------------
 - create a ping_ms.py file with the following code
-```
+```python
 # ping_ms.py
 
 from alix import Alix
@@ -23,7 +23,7 @@ class MicroService(Alix):
 ```
 
 - register, start and test your service
-```
+```sh
     # register ping service with the following parameters: 
     #     service name, 
     #     input channel, 
@@ -52,28 +52,28 @@ Install Alix (Ubuntu version)
 ----------------------------
 - install Redis (standard installation http://redis.io/download or Docker https://hub.docker.com/_/redis/)
 - switch to root user
-```
+```sh
     $ sudo su
 ```
 - install alix python package
-```
+```sh
     $ pip install https://github.com/boudartjj/alix/archive/v0.5-alpha.tar.gz
 ```
 - install alix server
-```
+```sh
     $ wget https://raw.githubusercontent.com/boudartjj/alix/master/bin/alix-srv
     $ chmod 755 alix-srv
     $ mv alix-srv /usr/bin
 ```
 - install and start alix daemon
-```
+```sh
     $ wget https://raw.githubusercontent.com/boudartjj/alix/master/bin/alixd
     $ chmod 755 alixd
     $ mv alixd /etc/init.d
     $ service alixd start
 ```
 - install alix cli
-```
+```sh
     $ wget https://raw.githubusercontent.com/boudartjj/alix/master/bin/alix
     $ chmod 755 alix
     $ mv alix /usr/bin
