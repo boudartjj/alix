@@ -24,7 +24,12 @@ class MicroService(Alix):
 
 - register, start and test your service
 ```
-    # register ping service
+    # register ping service with the following parameters: 
+    #     service name, 
+    #     input channel, 
+    #     module name, 
+    #     module path, 
+    #     service description
     $ alix register ping ping_input_channel ping_ms /home/myuser/alix "this is ping micro service"
     
     # set ping output channel
