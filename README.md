@@ -23,22 +23,22 @@ class MicroService(Alix):
 - register, start and test your service
 ```
     # register ping service
-    alix register ping ping_input_channel ping_ms /home/myuser/alix "this is ping micro service"
+    $ alix register ping ping_input_channel ping_ms /home/myuser/alix "this is ping micro service"
     
     # set ping output channel
-    alix setOutputChannel ping ping_output_channel
+    $ alix setOutputChannel ping ping_output_channel
     
     # start ping service
-    alix start ping
+    $ alix start ping
     
     # get service info
-    alix info ping
+    $ alix info ping
     
     # display services list
-    alix list
+    $ alix list
     
     # send message to ping_input_channel channel (will trigger the execution of ping service)
-    alix sendMessage ping_input_channel "my message"
+    $ alix sendMessage ping_input_channel "my message"
 ```
 
 Install Alix (Ubuntu version)
@@ -46,28 +46,28 @@ Install Alix (Ubuntu version)
 - install Redis (standard installation http://redis.io/download or Docker https://hub.docker.com/_/redis/)
 - switch to root user
 ```
-    sudo su
+    $ sudo su
 ```
 - install alix python package
 ```
-    pip install https://github.com/boudartjj/alix/archive/v0.5-alpha.tar.gz
+    $ pip install https://github.com/boudartjj/alix/archive/v0.5-alpha.tar.gz
 ```
 - install alix server
 ```
-    wget https://raw.githubusercontent.com/boudartjj/alix/master/bin/alix-srv
-    chmod 755 alix-srv
-    mv alix-srv /usr/bin
+    $ wget https://raw.githubusercontent.com/boudartjj/alix/master/bin/alix-srv
+    $ chmod 755 alix-srv
+    $ mv alix-srv /usr/bin
 ```
 - install and start alix daemon
 ```
-    wget https://raw.githubusercontent.com/boudartjj/alix/master/bin/alixd
-    chmod 755 alixd
-    mv alixd /etc/init.d
-    service alixd start
+    $ wget https://raw.githubusercontent.com/boudartjj/alix/master/bin/alixd
+    $ chmod 755 alixd
+    $ mv alixd /etc/init.d
+    $ service alixd start
 ```
 - install alix cli
 ```
-    wget https://raw.githubusercontent.com/boudartjj/alix/master/bin/alix
-    chmod 755 alix
-    mv alix /usr/bin
+    $ wget https://raw.githubusercontent.com/boudartjj/alix/master/bin/alix
+    $ chmod 755 alix
+    $ mv alix /usr/bin
 ```
