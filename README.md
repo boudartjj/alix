@@ -10,6 +10,8 @@ With Alix creating a micro service is as simple as that:
 --------------------------------------------------------
 - create a ping_ms.py file with the following code
 ```
+# ping_ms.py
+
 from alix import Alix
 class MicroService(Alix):
     #onMessage is executed each time a message is sent to the channel the service is listening to
