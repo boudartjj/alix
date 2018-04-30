@@ -15,18 +15,20 @@ INSTALL ALIX
         - wget https://raw.githubusercontent.com/boudartjj/alix/master/bin/alix-srv
         - chmod 755 alix-srv
         - mv alix-srv /usr/bin
-    - install alix daemon
-        - wget https://raw.githubusercontent.com/boudartjj/alix/master/bin/alixd
-        - chmod 755 alixd
-        - mv alixd /etc/init.d
+        - start alix server as daemon (2 methods)
+            - Method 1 (Debian / Ubuntu)
+                - wget https://raw.githubusercontent.com/boudartjj/alix/master/bin/alixd
+                - chmod 755 alixd
+                - mv alixd /etc/init.d
+                - service alixd start
+            - Method 2 (requires PM2 - http://http://pm2.keymetrics.io/docs/usage/quick-start/)
+                - pm2 start alix-srv --interpreter python
     - install alix cli
         - wget https://raw.githubusercontent.com/boudartjj/alix/master/bin/alix
         - chmod 755 alix
         - mv alix /usr/bin
 
 CREATE AND START A NEW MICRO SERVICE
-- start alix daemon
-    - service alixd start
 - create a folder for your micro services
     - mkdir /home/myuser/alix
 - copy the skeleton_ms.py (https://github.com/boudartjj/alix/blob/master/services/skeleton_ms.py) file in your micro services folder and implement you code in the onMessage(message) method

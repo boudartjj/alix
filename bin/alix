@@ -31,6 +31,8 @@ def help_():
 	print('  delParam          delete service parameter')
 	print('  clone             clone service')
 	print('  rename            rename service')
+	print('  exportConfig      export service configuration to file')
+	print('  importConfig      import service configuration from file')
 	print('  help              get help')
 
 if __name__ == "__main__":
