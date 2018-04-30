@@ -65,14 +65,14 @@ Install Alix
     $ chmod 755 alix-srv
     $ mv alix-srv /usr/bin
 ```
-- install and start alix daemon (Method 1 - Debian / Ubuntu)
+- start alix server method 1 (Debian / Ubuntu)
 ```sh
     $ wget https://raw.githubusercontent.com/boudartjj/alix/master/bin/alixd
     $ chmod 755 alixd
     $ mv alixd /etc/init.d
     $ service alixd start
 ```
-- install and start alix daemon (requires PM2 - http://pm2.keymetrics.io/docs/usage/quick-start/)
+- start alix server method 2 (requires PM2 - http://pm2.keymetrics.io/docs/usage/quick-start/)
 ```sh
     $ pm2 start alix-srv --interpreter python
 ```
