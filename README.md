@@ -48,8 +48,8 @@ class MicroService(Alix):
     $ alix sendMessage ping_input_channel "my message"
 ```
 
-Install Alix (Ubuntu version)
-----------------------------
+Install Alix
+------------
 - install Redis (standard installation http://redis.io/download or Docker https://hub.docker.com/_/redis/)
 - switch to root user
 ```sh
@@ -65,12 +65,16 @@ Install Alix (Ubuntu version)
     $ chmod 755 alix-srv
     $ mv alix-srv /usr/bin
 ```
-- install and start alix daemon
+- install and start alix daemon (Method 1 - Debian / Ubuntu)
 ```sh
     $ wget https://raw.githubusercontent.com/boudartjj/alix/master/bin/alixd
     $ chmod 755 alixd
     $ mv alixd /etc/init.d
     $ service alixd start
+```
+- install and start alix daemon (requires PM2 - http://pm2.keymetrics.io/docs/usage/quick-start/)
+```sh
+    $ pm2 start alix-srv --interpreter python
 ```
 - install alix cli
 ```sh
