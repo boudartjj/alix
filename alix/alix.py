@@ -152,8 +152,11 @@ def delParam(name, param):
 	_saveJSON(svc)
 
 def clone(sourceName, destinationName):
-        r = redis.StrictRedis()
         register(destinationName, getChannel(sourceName), getModule(sourceName), getModulePath(sourceName), getDescription(sourceName))
+	params = getParams(sourceName)
+	svc = _load(destinationName)
+	svc['params'] = params
+	_saveJSON(svc)
 
 def rename(sourceName, destinationName):
         clone(sourceName, destinationName)
@@ -297,12 +300,13 @@ class Alix(threading.Thread):
 				self._sendMessage(json.dumps({'timestamp': time.strftime('%Y%m%d%H%M%S', time.gmtime()), 'Type': 'message received', 'name': self.name , 'message': str(event)}))
 			if event and event['type'] == 'pmessage':
 				try: 
-					output = self.onMessage(event['data'])
+					message = event['data']
+					output = self.onMessage(message)
 					if output is not None and getOutputChannel(self.name) is not None:
 						sendMessage(getOutputChannel(self.name), output)
 				except Exception as e:
 					strNow = time.strftime('%Y%m%d%H%M%S', time.gmtime()) 
-					sendMessage('alix:err:' + self.name, json.dumps({'timestamp':strNow, 'serviceName':self.name, 'errorMessage': _getErrorMesssage()}))
+					sendMessage('alix:err:' + self.name, json.dumps({'timestamp':strNow, 'serviceName':self.name, 'message': message, 'errorMessage': _getErrorMesssage()}))
 			time.sleep(0.01)
 		p.close()
 		self._sendMessage('not running')

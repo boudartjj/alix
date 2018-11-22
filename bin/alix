@@ -8,7 +8,7 @@ def help_():
 	print('Usage: alix COMMAND')
 	print
 	print('Commands')
-	print('  list              get services list')
+	print('  list or ls        get services list')
 	print('  info              get service info')
 	print('  status            get service status')
 	print('  start             start service')
@@ -42,7 +42,7 @@ if __name__ == "__main__":
 	else:
 		cmd = sys.argv[1]
 
-	if cmd == "list":
+	if cmd == "list" or cmd == 'ls':
 		list = alix.list()
 		print 'STATUS'.ljust(7) + '  ' + 'SERVICE NAME'.ljust(32) + '  ' + 'CHANNEL'.ljust(48) + '  ' + 'PARAMS'.ljust(6)
 		print '-'*7 + '  ' + '-'*32 + '  ' + '-'*48 + '  ' + '-'*6
