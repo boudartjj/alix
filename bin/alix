@@ -44,10 +44,10 @@ if __name__ == "__main__":
 
 	if cmd == "list" or cmd == 'ls':
 		list = alix.list()
-		print 'STATUS'.ljust(7) + '  ' + 'SERVICE NAME'.ljust(32) + '  ' + 'CHANNEL'.ljust(48) + '  ' + 'PARAMS'.ljust(6)
-		print '-'*7 + '  ' + '-'*32 + '  ' + '-'*48 + '  ' + '-'*6
+		print 'STATUS'.ljust(7) + '  ' + 'SERVICE NAME'.ljust(32) + '  ' + 'CHANNEL'.ljust(48) + '  ' + 'MODULE'.ljust(48)
+		print '-'*7 + '  ' + '-'*32 + '  ' + '-'*48 + '  ' + '-'*48
 		for item in list:
-        		print alix.status(item['name']).ljust(7)[0:7] + '  ' + item['name'].ljust(32)[0:32] + '  ' + item['channel'].ljust(48)[0:48] + '  ' + str(item.has_key('params') and len(item['params']) > 0).ljust(6)[0:6]
+        		print alix.status(item['name']).ljust(7)[0:7] + '  ' + item['name'].ljust(32)[0:32] + '  ' + item['channel'].ljust(48)[0:48] + '  ' + item['module'].ljust(48)[0:48]
 	elif cmd == 'info':
 		if len(sys.argv) == 3:
 			name = sys.argv[2]
