@@ -1,1 +1,1 @@
-from alix import Alix
+from alix.alix import Alix
