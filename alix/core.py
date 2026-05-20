@@ -2,14 +2,11 @@
 
 import sys
 import traceback
-import subprocess
-from subprocess import Popen
-import os, signal
 import threading
 import redis
 import time
 import json
-import imp
+import importlib
 
 def _save(name, channel, module, modulePath, description):
     _saveJSON({'name': name, 'module': module, 'modulePath': modulePath, 'channel': channel, 'description': description})
@@ -167,11 +164,22 @@ def unregister(name):
     _delete(name)
 
 def start(name):
-    module = getModule(name)
-    modulePath = getModulePath(name)
-    fp, path, description = imp.find_module(module, [modulePath])
-    module = imp.load_module(module, fp, path, description)
-    fp.close()
+    module_name = getModule(name)
+    module_path = getModulePath(name)
+
+    # Construit le chemin complet vers le fichier .py
+    #file_path = f"{module_path}/{module_name}.py"
+    file_path = f"{module_path}"
+
+    # Charge le module de manière moderne
+    spec = importlib.util.spec_from_file_location(module_name, file_path)
+    if spec is None:
+        raise ModuleNotFoundError(f"Module {module_name} not found at {file_path}")
+    module = importlib.util.module_from_spec(spec)
+    #sys.modules[module_name] = module  # Optionnel : ajoute au sys.modules
+    #spec.loader.exec_module(module)
+
+    # Instancie et démarre le service
     svc = module.MicroService({'name' : name})
     svc.start()
     return svc

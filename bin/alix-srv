@@ -2,8 +2,7 @@
 
 import redis
 import time
-#import imp
-from alix import alix
+from alix.core import Alix
 
 def run():
 	runningServices = {}

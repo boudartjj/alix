@@ -1,1 +1,1 @@
-from alix.alix import Alix
+from alix.core import Alix
