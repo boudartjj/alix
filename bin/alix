@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from alix.core import Alix
+from alix import core as alix
 import sys
 
 def help_():

@@ -18,7 +18,7 @@ def _saveJSON(svc):
 
 def _load(name):
     r = redis.StrictRedis()
-    return json.loads(r.get('alix:config:' + name))
+    return json.loads(r.get('alix:config:' + name).decode('utf-8'))
 
 def _delete(name):
     r = redis.StrictRedis()
@@ -168,20 +168,21 @@ def start(name):
     module_path = getModulePath(name)
 
     # Construit le chemin complet vers le fichier .py
-    #file_path = f"{module_path}/{module_name}.py"
-    file_path = f"{module_path}"
+    file_path = f"{module_path}/{module_name}.py"
 
     # Charge le module de manière moderne
     spec = importlib.util.spec_from_file_location(module_name, file_path)
     if spec is None:
         raise ModuleNotFoundError(f"Module {module_name} not found at {file_path}")
     module = importlib.util.module_from_spec(spec)
-    #sys.modules[module_name] = module  # Optionnel : ajoute au sys.modules
-    #spec.loader.exec_module(module)
+    sys.modules[module_name] = module  # Optionnel : ajoute au sys.modules
+    spec.loader.exec_module(module)
 
     # Instancie et démarre le service
     svc = module.MicroService({'name' : name})
     svc.start()
+
+    print(f'Service {name} started with module {module_name} at path {module_path}')
     return svc
 
 def stop(name):
@@ -203,7 +204,7 @@ def status(name):
     r.set('alix:status:' + name, 'stopped')
     r.publish('alix:cmd:' + name, 'status')
     time.sleep(0.1)
-    status = r.get('alix:status:' + name)
+    status = r.get('alix:status:' + name).decode('utf-8')
     return status
 
 def list():
@@ -211,7 +212,7 @@ def list():
     r = redis.StrictRedis()
     servicesKeys = r.keys('alix:config:*')
     for key in servicesKeys:
-        config  = json.loads(r.get(key))
+        config  = json.loads(r.get(key).decode('utf-8'))
         services.append(config)
     return services
 
@@ -229,11 +230,13 @@ class Alix(threading.Thread):
         self._active = False
         self.name = kwargs['name']
         self.channel = getChannel(self.name)
+        print(f'{self.name} initialized')
 
     def isActive(self):
         return self._active
 
     def run(self):
+        print(f'{self.name} starting')
         self._active = True
         self._sendMessage('starting')
 
@@ -259,6 +262,8 @@ class Alix(threading.Thread):
         r = redis.StrictRedis()
         p = r.pubsub()
         p.subscribe('alix:cmd:' + self.name)
+
+        print(f'{self.name} listening on channel alix:cmd:{self.name}')
 
         while self.isActive():
             event = p.get_message()
@@ -305,7 +310,7 @@ class Alix(threading.Thread):
                 self._sendMessage(json.dumps({'timestamp': time.strftime('%Y%m%d%H%M%S', time.gmtime()), 'Type': 'message received', 'name': self.name , 'message': str(event)}))
             if event and event['type'] == 'pmessage':
                 try: 
-                    message = event['data']
+                    message = event['data'].decode('utf-8')
                     output = self.onMessage(message)
                     if output is not None and getOutputChannel(self.name) is not None:
                         sendMessage(getOutputChannel(self.name), output)

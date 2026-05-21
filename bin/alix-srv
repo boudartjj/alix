@@ -2,6 +2,7 @@
 
 import redis
 import time
+import alix.core as alix
 from alix.core import Alix
 
 def run():
@@ -15,9 +16,9 @@ def run():
 		event = p.get_message()
 		if event and event['type'] == 'message':
 			data = event['data']
-			print('cmd: ' + data)
+			print(f'cmd: {data}')
 			data = data.split()
-			cmd = data[0]
+			cmd = data[0].decode('utf-8')
 			if cmd == 'stopServer':
 				#stop all running services
 				for svcName in runningServices.keys():
@@ -25,9 +26,10 @@ def run():
 					if svc.isAlive: svc.stop() #alix.stop(svcName)		
 				exit = True
 			elif cmd == 'startService':
-				svcName = data[1]
+				svcName = data[1].decode('utf-8')
 				svc = alix.start(svcName)
-				if svcName not in runningServices: runningServices[svcName] = svc
+				if svcName not in runningServices: 
+					runningServices[svcName] = svc
 			elif cmd == 'restartService':
 				svcName = data[1]
 				if svcName in runningServices:
