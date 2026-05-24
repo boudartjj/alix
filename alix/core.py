@@ -248,6 +248,7 @@ class Alix(threading.Thread):
         self._sendMessage('started')
 
     def stop(self):
+        print(f'{self.name} stopping')
         self._sendMessage('stopping')
         self._active = False
 

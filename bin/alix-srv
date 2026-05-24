@@ -23,21 +23,28 @@ def run():
 				#stop all running services
 				for svcName in runningServices.keys():
 					svc = runningServices[svcName]
-					if svc.isAlive: svc.stop() #alix.stop(svcName)		
+					if svc.isAlive: svc.stop()	
 				exit = True
 			elif cmd == 'startService':
+				#start the service
 				svcName = data[1].decode('utf-8')
 				svc = alix.start(svcName)
 				if svcName not in runningServices: 
 					runningServices[svcName] = svc
+			elif cmd == 'stopService':
+				#stop the service
+				svcName = data[1].decode('utf-8')
+				if svcName in runningServices:
+					svc = runningServices[svcName]
+					svc.stop()
 			elif cmd == 'restartService':
 				svcName = data[1]
 				if svcName in runningServices:
 					svc = runningServices[svcName]
 					svc.stop()
-				#alix.stop(svcName)
 				svc = alix.start(svcName)
-				if svcName not in runningServices: runningServices[svcName] = svc
+				if svcName not in runningServices: 
+					runningServices[svcName] = svc
 			elif cmd == 'restartAllServices':
 				for svcName in runningServices.keys():
 					svc = runningServices[svcName]

@@ -79,7 +79,8 @@ if __name__ == "__main__":
     elif cmd == 'stop':
         if len(sys.argv) == 3:
             name = sys.argv[2]
-            alix.stop(name)
+            alix.sendMessage('alix:cmd', 'stopService ' + name)
+            #alix.stop(name)
         else :
             print()
             print('Usage: alix stop [service_name]')
@@ -88,9 +89,11 @@ if __name__ == "__main__":
         alix.startAll()
     elif cmd == 'start':
         if len(sys.argv) == 3:
+            print('Starting service...')
             name = sys.argv[2]
             #send the start message to alix-srv
             alix.sendMessage('alix:cmd', 'startService ' + name)
+            print('Start message sent to alix-srv')
         else:
             print()
             print('Usage: alix start [service_name]')
