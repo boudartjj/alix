@@ -22,31 +22,41 @@ def run():
 			if cmd == 'stopServer':
 				#stop all running services
 				for svcName in runningServices.keys():
+					#stop the service
 					svc = runningServices[svcName]
-					if svc.isAlive: svc.stop()	
+					svc.stop()
+					#remove from running services list
+					runningServices.pop(svcName)
 				exit = True
 			elif cmd == 'startService':
+				svcName = data[1].decode('utf-8')
 				#start the service
-				svcName = data[1].decode('utf-8')
 				svc = alix.start(svcName)
-				if svcName not in runningServices: 
-					runningServices[svcName] = svc
+				#add to running services list
+				runningServices[svcName] = svc
 			elif cmd == 'stopService':
-				#stop the service
 				svcName = data[1].decode('utf-8')
 				if svcName in runningServices:
+					#stop the service
 					svc = runningServices[svcName]
 					svc.stop()
+					#remove from running services list
+					runningServices.pop(svcName)
 			elif cmd == 'restartService':
-				svcName = data[1]
+				svcName = data[1].decode('utf-8')
 				if svcName in runningServices:
+					#stop the service
 					svc = runningServices[svcName]
 					svc.stop()
+					#remove from running services list
+					runningServices.pop(svcName)
+				#start the service
 				svc = alix.start(svcName)
-				if svcName not in runningServices: 
-					runningServices[svcName] = svc
+				#add to running services list
+				runningServices[svcName] = svc
 			elif cmd == 'restartAllServices':
 				for svcName in runningServices.keys():
+					svcName = svcName.decode('utf-8')
 					svc = runningServices[svcName]
 					if svc.isAlive:
 						alix.stop(svcName)

@@ -187,7 +187,7 @@ def start(name):
 
 def stop(name):
     r = redis.StrictRedis()
-    r.publish('alix:cmd:' + name, 'stop')
+    r.publish('alix:cmd:' + name, 'stopService')
 
 def stopAll():
     services = list()
