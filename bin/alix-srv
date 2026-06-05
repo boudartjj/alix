@@ -6,6 +6,7 @@ import alix.core as alix
 from alix.core import Alix
 
 def run():
+	print('Starting Alix Microservice Server...')
 	runningServices = {}
 	r = redis.StrictRedis()
 	p = r.pubsub()
