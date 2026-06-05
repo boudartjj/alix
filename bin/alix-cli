@@ -31,6 +31,7 @@ def help_():
     print('  delParam          delete service parameter')
     print('  clone             clone service')
     print('  rename            rename service')
+    print('  sendMessage       send message to a channel')  
     print('  exportConfig      export service configuration to file')
     print('  importConfig      import service configuration from file')
     print('  help              get help')
@@ -215,9 +216,14 @@ if __name__ == "__main__":
             print('Usage delParam [service_name] [param_name]')
             print()
     elif cmd == 'sendMessage':
-        channel = sys.argv[2]
-        message = sys.argv[3]
-        alix.sendMessage(channel, message)
+        if len(sys.argv) == 4:
+            channel = sys.argv[2]
+            message = sys.argv[3]
+            alix.sendMessage(channel, message)
+        else:
+            print()
+            print('Usage: alix sendMessage [channel] [message]')
+            print()
     elif cmd == 'exportConfig':
         name = sys.argv[2]
         path = sys.argv[3]
