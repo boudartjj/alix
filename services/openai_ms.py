@@ -20,10 +20,6 @@ class MicroService(Alix):
 			if instructions == None:
 				instructions = ''
 
-			#context = getParam(self.name, 'context')
-			#if context == None:  
-			#	context = ''
-
 			max_context_size = getParam(self.name, 'max_context_size')
 			if max_context_size == None:
 				max_context_size = 1000
@@ -38,35 +34,52 @@ class MicroService(Alix):
 			if short_term_memory == None:  
 				short_term_memory = ''
 
-			prompt = "long_term_memory: " + long_term_memory + " - short_term_memory: " + short_term_memory + " - ** instructions: " + instructions + " ** - timestamp: " + str(datetime.now()) + " - ** message: " + message + " **"
+			conversation_history = getParam(self.name, 'conversation_history')
+			if conversation_history == None:
+				conversation_history = []
+			else:
+				conversation_history = json.loads(conversation_history)
+
+			max_conversation_history = int(getParam(self.name, 'max_conversation_history'))
+			if max_conversation_history == None:
+				max_conversation_history = 20
+				setParam(self.name, 'max_conversation_history', max_conversation_history)
+
+			conversation_history.append("timestamp: " + str(datetime.now()) + " - *** Me: " + message + " ***")
+			prompt = "long_term_memory: " + long_term_memory + " - short_term_memory: " + short_term_memory + " - ** instructions: " + instructions + " ** - conversation_history: " + json.dumps(conversation_history)
 
 			context_summary_prompt = getParam(self.name, 'context_summary_prompt')
 			if context_summary_prompt == None:
-				context_summary_prompt = "Summarize this conversation so far to approximately " + str(0.4 * max_context_size) + " characters"
+				context_summary_prompt = "*** Summarize this conversation so far to maximum " + str(max_context_size) + " characters ***"
 			else:
-				context_summary_prompt = context_summary_prompt + " - " + "### The size of the summary should be around " + str(0.4 * max_context_size) + " characters."
+				context_summary_prompt = context_summary_prompt + " - " + "*** IMPORTANT: The size of the summary must not exceed " + str(max_context_size) + " characters ***"
 			
 			response = self.openai_request(url, token, model, prompt).json()["choices"][0]["message"]["content"]
 
 			print(f'{response}')
 
-			short_term_memory = short_term_memory + "timestamp: " + str(datetime.now()) + " - " + " *** Me: " + message + " *** - Agent: " + response
-			if len(long_term_memory + short_term_memory) > max_context_size:
-				print('Memory full ' + str(len(long_term_memory + short_term_memory)) + ' > ' + str(max_context_size) + ', summarizing...')
+			conversation_history.append("timestamp: " + str(datetime.now()) + " - Agent: " + response)
+			if len(conversation_history) > max_conversation_history:
+				print(f'Conversation history exceeded {max_conversation_history} interactions, trimming to the most recent {max_conversation_history // 2} interactions.')
+				print(context_summary_prompt)
 
 				#update long term memory
-				long_term_memory = self.openai_request(url, token, model, context_summary_prompt + ":" + long_term_memory + short_term_memory).json()["choices"][0]["message"]["content"]
+				long_term_memory = self.openai_request(url, token, model, context_summary_prompt + ":" + long_term_memory + short_term_memory + json.dumps(conversation_history)).json()["choices"][0]["message"]["content"]
 				setParam(self.name, 'long_term_memory', long_term_memory)
 
 				#update short term memory
-				short_term_memory = self.openai_request(url, token, model, context_summary_prompt + ":" + short_term_memory).json()["choices"][0]["message"]["content"]
+				short_term_memory = self.openai_request(url, token, model, context_summary_prompt + ":" + json.dumps(conversation_history)).json()["choices"][0]["message"]["content"]
 				setParam(self.name, 'short_term_memory', short_term_memory)
 
-				print(f'New memory size: {len(long_term_memory) + len(short_term_memory)}')
+				#reduce conversation history to only the most recent interactions	
+				setParam(self.name, 'conversation_history', json.dumps(conversation_history[-(max_conversation_history // 2):]))
+
+				print(f'Conversation history size: {len(conversation_history)}')
 			else:
-				print(f'Memory size: {len(long_term_memory) + len(short_term_memory)}')
+				print(f'Conversation history size: {len(conversation_history)}')
 				setParam(self.name, 'long_term_memory', long_term_memory)
 				setParam(self.name, 'short_term_memory', short_term_memory)
+				setParam(self.name, 'conversation_history', json.dumps(conversation_history))
 
 			return response
 		except Exception as e:

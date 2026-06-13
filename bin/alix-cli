@@ -29,6 +29,7 @@ def help_():
     print('  getParam          get service parameter')
     print('  setParam          set service parameter')
     print('  delParam          delete service parameter')
+    print('  listParams        list service parameters')
     print('  clone             clone service')
     print('  rename            rename service')
     print('  sendMessage       send message to a channel')  
@@ -76,18 +77,23 @@ if __name__ == "__main__":
             print('Usage: alix status [service_name]')
             print()
     elif cmd == 'stopAll':
-        alix.stopAll()
+        for svc in alix.list():
+            name = svc['name']
+            print('Stopping service ' + name + '...')
+            alix.sendMessage('alix:cmd', 'stopService ' + name)
     elif cmd == 'stop':
         if len(sys.argv) == 3:
             name = sys.argv[2]
             alix.sendMessage('alix:cmd', 'stopService ' + name)
-            #alix.stop(name)
         else :
             print()
             print('Usage: alix stop [service_name]')
             print()
     elif cmd == 'startAll':
-        alix.startAll()
+        for svc in alix.list():
+            name = svc['name']
+            print('Starting service ' + name + '...')
+            alix.sendMessage('alix:cmd', 'startService ' + name)    
     elif cmd == 'start':
         if len(sys.argv) == 3:
             print('Starting service...')
@@ -214,6 +220,15 @@ if __name__ == "__main__":
         else:
             print()
             print('Usage delParam [service_name] [param_name]')
+            print()
+    elif cmd == 'listParams':
+        if len(sys.argv) == 3:
+            name = sys.argv[2]
+            params = alix.listParams(name)
+            print(params)
+        else:
+            print()
+            print('Usage: alix listParams [service_name]')
             print()
     elif cmd == 'sendMessage':
         if len(sys.argv) == 4:
