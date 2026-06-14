@@ -6,6 +6,9 @@ from alix.core import getParam, setParam
 import requests
 import json
 from datetime import datetime
+import traceback
+
+
 
 class MicroService(Alix):
 	def onMessage(self, message):
@@ -53,10 +56,14 @@ class MicroService(Alix):
 				context_summary_prompt = "*** Summarize this conversation so far to maximum " + str(max_context_size) + " characters ***"
 			else:
 				context_summary_prompt = context_summary_prompt + " - " + "*** IMPORTANT: The size of the summary must not exceed " + str(max_context_size) + " characters ***"
-			
-			response = self.openai_request(url, token, model, prompt).json()["choices"][0]["message"]["content"]
 
-			print(f'{response}')
+			response_raw = self.openai_request(url, token, model, prompt).json()
+
+			print(f'response_raw: {response_raw}')
+
+			response = response_raw["choices"][0]["message"]["content"].replace('```json', '').replace('```', '')
+
+			print(f'response: {response}')
 
 			conversation_history.append("timestamp: " + str(datetime.now()) + " - Agent: " + response)
 			if len(conversation_history) > max_conversation_history:
@@ -83,8 +90,10 @@ class MicroService(Alix):
 
 			return response
 		except Exception as e:
-			print(f'Error: {e}')
-			return f'Error: {e}'
+			error_details = traceback.format_exc()
+			print(f'{self.name} encountered an error: {str(e)}')
+			print(f'Error details: {error_details}')
+			return "Sorry, I encountered an error while processing your request."
 		
 	def openai_request(self, url, token, model, request):			
 		headers = {

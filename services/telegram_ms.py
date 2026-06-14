@@ -15,9 +15,8 @@ class MicroService(Alix):
 
 		The incoming message is forwarded to the configured Telegram chat.
 		"""
-		message = message.replace('```json', '').replace('```', '')  # Clean up message formatting
 		print(f'{self.name} received message: {message}')
-
+	
 		try:
 			message = json.loads(message)
 
