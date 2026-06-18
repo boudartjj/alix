@@ -41,7 +41,10 @@ class MicroService(Alix):
 			if conversation_history == None:
 				conversation_history = []
 			else:
-				conversation_history = json.loads(conversation_history)
+				try:
+					conversation_history = json.loads(conversation_history)
+				except json.JSONDecodeError:
+					conversation_history = []
 
 			max_conversation_history = int(getParam(self.name, 'max_conversation_history'))
 			if max_conversation_history == None:
@@ -65,7 +68,19 @@ class MicroService(Alix):
 
 			print(f'response: {response}')
 
-			conversation_history.append("timestamp: " + str(datetime.now()) + " - Agent: " + response)
+			keep_in_memory = True;
+			try:
+				keep_in_memory = json.loads(response)["remember"]
+			except:
+				pass
+
+			if keep_in_memory:
+				print('Keeping this interaction in conversation history.')
+				conversation_history.append("timestamp: " + str(datetime.now()) + " - Agent: " + response)
+			else:
+				print('Not keeping this interaction in conversation history.')
+				conversation_history.pop() #remove the last user message from conversation history if response indicates not to keep in memory
+
 			if len(conversation_history) > max_conversation_history:
 				print(f'Conversation history exceeded {max_conversation_history} interactions, trimming to the most recent {max_conversation_history // 2} interactions.')
 				print(context_summary_prompt)
