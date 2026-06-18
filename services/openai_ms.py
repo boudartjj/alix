@@ -86,11 +86,11 @@ class MicroService(Alix):
 				print(context_summary_prompt)
 
 				#update long term memory
-				long_term_memory = self.openai_request(url, token, model, context_summary_prompt + ":" + long_term_memory + short_term_memory + json.dumps(conversation_history)).json()["choices"][0]["message"]["content"]
+				long_term_memory = self.openai_request(url, token, model, context_summary_prompt + ": " + long_term_memory + " - " + short_term_memory).json()["choices"][0]["message"]["content"]
 				setParam(self.name, 'long_term_memory', long_term_memory)
 
 				#update short term memory
-				short_term_memory = self.openai_request(url, token, model, context_summary_prompt + ":" + json.dumps(conversation_history)).json()["choices"][0]["message"]["content"]
+				short_term_memory = self.openai_request(url, token, model, context_summary_prompt + ": " + json.dumps(conversation_history)).json()["choices"][0]["message"]["content"]
 				setParam(self.name, 'short_term_memory', short_term_memory)
 
 				#reduce conversation history to only the most recent interactions	
