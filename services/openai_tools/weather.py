@@ -17,11 +17,10 @@ def get_coordinates(address, country_code=None, count=10, language='en'):
     url = 'https://geocoding-api.open-meteo.com/v1/search?' + urlencode(params)
     request = Request(url, headers={'User-Agent': 'python-urllib/3'})
 
-    with urlopen(request) as response:
+    with urlopen(request, timeout=10) as response:
         data = json.load(response)
 
     results = data.get('results') or []
-    print(f'get_coordinates response: {results}')
 
     return [
         {
@@ -47,17 +46,16 @@ def get_weather(latitude=52.52, longitude=13.41, parameters='temperature_2m,prec
     url = 'https://api.open-meteo.com/v1/forecast?' + urlencode(params)
     request = Request(url, headers={'User-Agent': 'python-urllib/3'})
 
-    with urlopen(request) as response:
+    with urlopen(request, timeout=10) as response:
         data = json.load(response)
 
-    print(f'get_weather response: {data}')
     return data
 
-def get_weater_forecast(location, country_code, language='en'):
+def get_weather_forecast(location_name, country_code, language_code='en'):
     """Get weather forecast for a given address."""
-    coordinates_list = get_coordinates(location, country_code, language=language.lower())
+    coordinates_list = get_coordinates(location_name, country_code, language=language_code.lower())
     if not coordinates_list:
-        print(f'No coordinates found for location: {location}')
+        print(f'No coordinates found for location: {location_name}')
         return None
 
     # Use the first result for weather forecast

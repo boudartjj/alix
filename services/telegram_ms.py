@@ -6,6 +6,7 @@ import json
 from alix.core import Alix
 from alix.core import getParam, setParam, getOutputChannel
 import time
+import traceback
 
 class MicroService(Alix):
 	"""Telegram microservice implementation based on the Alix framework."""
@@ -15,8 +16,13 @@ class MicroService(Alix):
 
 		The incoming message is forwarded to the configured Telegram chat.
 		"""
+		
+		if len(message) == 0:
+			print(f'{self.name} received empty message, ignoring.')
+			return None
+		
 		print(f'{self.name} received message: {message}')
-	
+		
 		try:
 			message = json.loads(message)
 
@@ -37,7 +43,9 @@ class MicroService(Alix):
 			# Log the Telegram response for diagnostics
 			print(f'{self.name} received response: {response.json()}')
 		except Exception as e:
+			error_details = traceback.format_exc()
 			print(f'{self.name} encountered an error: {str(e)}')
+			print(f'Error details: {error_details}')
 
 		return None
 
@@ -82,4 +90,6 @@ class MicroService(Alix):
 				
 				time.sleep(1)  # Sleep briefly to avoid excessive polling
 			except Exception as e:
+				error_details = traceback.format_exc()
 				print(f'{self.name} encountered an error: {str(e)}')
+				print(f'Error details: {error_details}')
