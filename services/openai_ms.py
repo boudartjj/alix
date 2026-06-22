@@ -119,7 +119,13 @@ class MicroService(Alix):
 				try:
 					response = response_raw.json()["choices"][0]["message"]["content"].replace('```json', '').replace('```', '')
 					if len(response) > 0 :
-						messages.append({"role": "assistant", "content": response})
+						keep_msg = True
+						try:
+							keep_msg = json.loads(response)["remember"]
+						except:
+							pass
+						if keep_msg :
+							messages.append({"role": "assistant", "content": response})
 						print(f'response: {response}')
 						try:
 							self.updateMemory(messages, long_term_memory, short_term_memory, max_conversation_history, context_summary_prompt, url, token, model)
