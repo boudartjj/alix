@@ -6,6 +6,7 @@ from alix.core import getParam, setParam
 import requests
 import json
 import ast
+import re
 from datetime import datetime
 import traceback
 
@@ -166,7 +167,7 @@ class MicroService(Alix):
 				
 			print(f'can reply = {can_reply}')
 
-			return response
+			return json.dumps(clean_json(response))
 		except Exception as e:
 			error_details = traceback.format_exc()
 			print(f'{self.name} encountered an error: {str(e)}')
@@ -227,3 +228,38 @@ class MicroService(Alix):
 			setParam(self.name, 'messages', json.dumps(messages))
 		
 		return messages, long_term_memory, short_term_memory
+
+def clean_json(s: str) -> any:
+    if not s or not isinstance(s, str):
+        return s
+
+    s = s.strip()
+
+    # Nettoyer les backticks markdown
+    if s.startswith('```'):
+        s = '\n'.join(s.split('\n')[1:-1]).strip()
+
+    # Extraire le bloc JSON
+    match = re.search(r'\{.*\}|\[.*\]', s, re.DOTALL)
+    if match:
+        s = match.group(0)
+
+    # Remplacer les sauts de ligne réels DANS les valeurs par \n
+    # (entre les guillemets uniquement)
+    def escape_newlines(m):
+        return m.group(0).replace('\n', '\\n').replace('\r', '\\r')
+
+    s = re.sub(r'"(.*?)"', escape_newlines, s, flags=re.DOTALL)
+
+    try:
+        return json.loads(s)
+    except json.JSONDecodeError as e:
+        print(f"JSON error at pos {e.pos}: {e.msg}")
+
+    try:
+        parsed = ast.literal_eval(s)
+        return json.loads(json.dumps(parsed))
+    except (ValueError, SyntaxError):
+        pass
+
+    return None

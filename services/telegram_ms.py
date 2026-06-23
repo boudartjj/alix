@@ -7,7 +7,6 @@ from alix.core import Alix
 from alix.core import getParam, setParam, getOutputChannel
 import time
 import traceback
-import re
 
 class MicroService(Alix):
 	"""Telegram microservice implementation based on the Alix framework."""
@@ -25,8 +24,12 @@ class MicroService(Alix):
 		print(f'{self.name} received message: {message}')
 		
 		try:
-			clean_message = re.sub(r'[\x00-\x1F\x7F-\x9F]', '', message)
-			message = json.loads(clean_message)
+			try:
+				message = json.loads(message)
+			except (json.JSONDecodeError, UnicodeDecodeError):
+				error_details = traceback.format_exc()
+				print(f'{self.name} encountered an error: {str(e)}')
+				print(f'Error details: {error_details}')				
 
 			# Retrieve bot token and chat ID from service parameters
 			bot_token = getParam(self.name, 'bot_token')
