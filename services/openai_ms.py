@@ -93,8 +93,8 @@ class MicroService(Alix):
 					print(f'{self.name} encountered an error during loading saved messages: {str(e)}')
 					print(f'Error details: {error_details}')
 
-			# append the new messahe
-			messages.append({"role": "user", "content": message})
+			# append the new message
+			messages.append({"role": "user", "content": f"{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} - {message}"})
 
 			# remove all messages containing tool_call_id attribute
 			messages = [
