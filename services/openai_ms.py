@@ -91,7 +91,7 @@ class MicroService(Alix):
 					print(f'Error decoding saved messages JSON: {saved_messages}')
 					error_details = traceback.format_exc()
 					print(f'{self.name} encountered an error during loading saved messages: {str(e)}')
-					print(f'Error details: {error_details}')
+					print(f'Error details: {error_details}') 
 
 			# append the new message
 			messages.append({"role": "user", "content": f"{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} - {message}"})
@@ -113,7 +113,11 @@ class MicroService(Alix):
 					print(f'{self.name} did not receive a response from the OpenAI API.')
 					return "Sorry, I couldn't get a response from the OpenAI API."
 
-				print(f'response_raw: {response_raw.json()}')
+				try:
+					print(f'response_raw: {response_raw.json()}')
+				except Exception as e:
+					print(f'Error parsing response JSON: {str(e)}')
+					return "Sorry, I received an invalid response from the OpenAI API."
 
 				## Extract the content from the OpenAI API response and update memory
 				response = ""
@@ -142,26 +146,27 @@ class MicroService(Alix):
 				try:
 					tool_calls = response_raw.json()["choices"][0]["message"]["tool_calls"]
 					messages.append({"role": "assistant", "content": "", "tool_calls": tool_calls})
-					try:
-						for tool_call in tool_calls:
-							can_reply = False
-							module_function = tool_call["function"]["name"]
-							if '.' in module_function:
-								module_function = module_function.split('.')	
-								module = module_function[0]
-								function = module_function[1]
-							else:
-								module = module_function
-								function = None	
-							params = json.loads(tool_call["function"]["arguments"])
-
-							print(f'Calling tool: {module_function} with parameters: {params}')
-							tool_response = getattr(__import__(module), function)(**params)
-							messages.append({"role": "tool", "tool_call_id": tool_call["id"], "name": tool_call["function"]["name"], "content": json.dumps(tool_response)})
-					except Exception as e:
-						error_details = traceback.format_exc()
-						print(f'{self.name} encountered an error: {str(e)}')
-						print(f'Error details: {error_details}')
+					if tool_calls is not None:
+						try:
+							for tool_call in tool_calls:
+								can_reply = False
+								module_function = tool_call["function"]["name"]
+								if '.' in module_function:
+									module_function = module_function.split('.')	
+									module = module_function[0]
+									function = module_function[1]
+								else:
+									module = module_function
+									function = None	
+								params = json.loads(tool_call["function"]["arguments"])
+	
+								print(f'Calling tool: {module_function} with parameters: {params}')
+								tool_response = getattr(__import__(module), function)(**params)
+								messages.append({"role": "tool", "tool_call_id": tool_call["id"], "name": tool_call["function"]["name"], "content": json.dumps(tool_response)})
+						except Exception as e:
+							error_details = traceback.format_exc()
+							print(f'{self.name} encountered an error: {str(e)}')
+							print(f'Error details: {error_details}')
 				except:
 					pass
 				
@@ -207,12 +212,26 @@ class MicroService(Alix):
 			print(context_summary_prompt)
 
 			#update long term memory
-			long_term_memory = self.openai_request(url, token, model, context_summary_prompt + ": " + long_term_memory + " - " + short_term_memory).json()["choices"][0]["message"]["content"]
-			setParam(self.name, 'long_term_memory', long_term_memory)
+			response = self.openai_request(url, token, model, context_summary_prompt + ": " + long_term_memory + " - " + short_term_memory)
+			if response is not None:
+				try:
+					response_json = response.json()
+					if "choices" in response_json and len(response_json["choices"]) > 0:
+						long_term_memory = response_json["choices"][0]["message"]["content"]
+						setParam(self.name, 'long_term_memory', long_term_memory)
+				except Exception as e:
+					print(f'Error updating long term memory: {str(e)}')
 
 			#update short term memory
-			short_term_memory = self.openai_request(url, token, model, context_summary_prompt + ": " + json.dumps(messages)).json()["choices"][0]["message"]["content"]
-			setParam(self.name, 'short_term_memory', short_term_memory)
+			response = self.openai_request(url, token, model, context_summary_prompt + ": " + json.dumps(messages))
+			if response is not None:
+				try:
+					response_json = response.json()
+					if "choices" in response_json and len(response_json["choices"]) > 0:
+						short_term_memory = response_json["choices"][0]["message"]["content"]
+						setParam(self.name, 'short_term_memory', short_term_memory)
+				except Exception as e:
+					print(f'Error updating short term memory: {str(e)}')
 
 			#reduce conversation history to only the most recent interactions	
 			setParam(self.name, 'messages', json.dumps(messages[-(max_conversation_history // 2):]))

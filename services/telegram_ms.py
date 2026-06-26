@@ -25,7 +25,7 @@ class MicroService(Alix):
 		
 		try:
 			try:
-				message = json.loads(message)
+				message = json.loads(message, strict=False)
 			except (json.JSONDecodeError, UnicodeDecodeError):
 				error_details = traceback.format_exc()
 				print(f'{self.name} encountered an error: {str(e)}')

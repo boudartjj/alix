@@ -1,0 +1,73 @@
+[
+    {
+        "type": "function",
+        "function": {
+            "name": "weather.get_weather_forecast",
+            "description": "weather forecasts",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "location_name": {
+                        "type": "string",
+                        "description": "Location name (ex: Brussels)"
+                    },
+                    "country_code": {
+                        "type": "string",
+                        "description": "Location country ISO 3166-2 code (ex: BE)"
+                    },
+                    "language_code": {
+                        "type": "string",
+                        "description": "language code of the location name (ex: brussels en, Bruxelles fr)"
+                    }
+                },
+                "required": ["location_name", "country_code", "language_code"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "web_search.search",
+            "description": "Search the web using Tavily Search API",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "The search query string"
+                    },
+                    "api_key": {
+                        "type": "string",
+                        "description": "Tavily API key (optional, can be set via TAVILY_API_KEY environment variable)"
+                    },
+                    "search_depth": {
+                        "type": "string",
+                        "enum": ["basic", "advanced"],
+                        "description": "Search depth level",
+                        "default": "basic"
+                    },
+                    "include_domains": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "List of domains to include in search results"
+                    },
+                    "exclude_domains": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "List of domains to exclude from search results"
+                    },
+                    "max_results": {
+                        "type": "integer",
+                        "description": "Maximum number of results to return",
+                        "default": 5
+                    }
+                },
+                "required": ["query"]
+            }
+        }
+    }
+]
