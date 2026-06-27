@@ -69,5 +69,48 @@
                 "required": ["query"]
             }
         }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "news.get_news",
+            "description": "Fetch news articles using NewsAPI",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "Keywords or phrases to search for in article content"
+                    },
+                    "language": {
+                        "type": "string",
+                        "description": "Language of the articles (ISO 639-1 code)",
+                        "default": "fr"
+                    },
+                    "country": {
+                        "type": "string",
+                        "description": "Country code (ISO 3166-1 alpha-2) to filter by country"
+                    },
+                    "category": {
+                        "type": "string",
+                        "enum": ["business", "entertainment", "general", "health", "science", "sports", "technology"],
+                        "description": "News category"
+                    },
+                    "sources": {
+                        "type": "string",
+                        "description": "Comma-separated list of news sources to filter by"
+                    },
+                    "page_size": {
+                        "type": "integer",
+                        "description": "Number of results to return (max 100)",
+                        "default": 5
+                    },
+                    "api_key": {
+                        "type": "string",
+                        "description": "NewsAPI key (optional, can be set via NEWSAPI_KEY environment variable)"
+                    }
+                }
+            }
+        }
     }
 ]

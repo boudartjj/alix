@@ -172,7 +172,7 @@ class MicroService(Alix):
 				
 			print(f'can reply = {can_reply}')
 
-			return json.dumps(clean_json(response))
+			return json.dumps(clean_json(response), ensure_ascii=False)
 		except Exception as e:
 			error_details = traceback.format_exc()
 			print(f'{self.name} encountered an error: {str(e)}')

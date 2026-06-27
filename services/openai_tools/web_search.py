@@ -2,7 +2,7 @@ import requests
 import json
 
 
-def search(query, api_key=None, search_depth="basic", include_domains=[], exclude_domains=[], max_results=5):
+def search(query, api_key=None, search_depth="basic", include_domains=[], exclude_domains=[], max_results=20:
     """Search the web using Tavily Search API.
 
     Args:
