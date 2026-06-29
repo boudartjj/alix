@@ -98,7 +98,7 @@ def get_weather_forecast(location_name, country_code, language_code='en'):
     coordinates_list = get_coordinates(location_name, country_code, language=language_code.lower())
     if not coordinates_list:
         print(f'No coordinates found for location: {location_name}')
-        return None
+        return location_name + " (" + country_code + ") not found"
 
     # Step 2: Use the first (most relevant) result for weather lookup
     first_result = coordinates_list[0]

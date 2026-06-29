@@ -103,7 +103,10 @@ class MicroService(Alix):
 			]
 
 			can_reply = False
-			while not can_reply:
+			max_iterations = 3
+			while not can_reply and max_iterations > 0:
+				max_iterations -= 1
+
 				# send the request to the OpenAI API and get the response
 				response_raw = self.openai_request(url, token, model, messages, tools, timeout)
 
@@ -132,8 +135,19 @@ class MicroService(Alix):
 						
 						messages.append({"role": "assistant", "content": response})
 						print(f'response: {response}')
+
 						try:
-							self.updateMemory(messages, long_term_memory, short_term_memory, max_conversation_history, context_summary_prompt, url, token, model)
+							json_response = json.loads(response)
+							print("OK - previous message is fully JSON Compliant")
+						except Exception as e:
+							error_details = traceback.format_exc()
+							print("KO - previous message is not fully JSON Compliant")
+							print(f'Error details: {error_details}')
+							can_reply = False
+							messages.append({"role": "user", "content": response + " is Invalid JSON. Retry and return ONLY a raw JSON object and follow instructions: " + instructions})
+						try:
+							if can_reply:
+								self.updateMemory(messages, long_term_memory, short_term_memory, max_conversation_history, context_summary_prompt, url, token, model)
 						except Exception as e:
 							error_details = traceback.format_exc()
 							print(f'{self.name} encountered an error during memory update: {str(e)}')
@@ -145,8 +159,8 @@ class MicroService(Alix):
 				tool_calls = []
 				try:
 					tool_calls = response_raw.json()["choices"][0]["message"]["tool_calls"]
-					messages.append({"role": "assistant", "content": "", "tool_calls": tool_calls})
 					if tool_calls is not None:
+						messages.append({"role": "assistant", "content": "", "tool_calls": tool_calls})
 						try:
 							for tool_call in tool_calls:
 								can_reply = False
@@ -172,7 +186,7 @@ class MicroService(Alix):
 				
 			print(f'can reply = {can_reply}')
 
-			return json.dumps(clean_json(response), ensure_ascii=False)
+			return response
 		except Exception as e:
 			error_details = traceback.format_exc()
 			print(f'{self.name} encountered an error: {str(e)}')
