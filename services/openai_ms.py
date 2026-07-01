@@ -14,7 +14,9 @@ import asyncio
 
 class MicroService(Alix):
 	def onMessage(self, message):
+		print("----------------------------- PROCESS MESSAGE -----------------------------")
 		print(f'{self.name} received message: {message}')
+		print("")
 
 		try:
 			## Retrieve parameters from the Alix framework
@@ -103,7 +105,7 @@ class MicroService(Alix):
 			]
 
 			can_reply = False
-			max_iterations = 3
+			max_iterations = 10
 			while not can_reply and max_iterations > 0:
 				max_iterations -= 1
 
@@ -116,11 +118,11 @@ class MicroService(Alix):
 					print(f'{self.name} did not receive a response from the OpenAI API.')
 					return "Sorry, I couldn't get a response from the OpenAI API."
 
-				try:
-					print(f'response_raw: {response_raw.json()}')
-				except Exception as e:
-					print(f'Error parsing response JSON: {str(e)}')
-					return "Sorry, I received an invalid response from the OpenAI API."
+				#try:
+				#	print(f'response_raw: {response_raw.json()}')
+				#except Exception as e:
+				#	print(f'Error parsing response JSON: {str(e)}')
+				#	return "Sorry, I received an invalid response from the OpenAI API."
 
 				## Extract the content from the OpenAI API response and update memory
 				response = ""
@@ -135,14 +137,15 @@ class MicroService(Alix):
 						
 						messages.append({"role": "assistant", "content": response})
 						print(f'response: {response}')
+						print("")
 
 						try:
 							json_response = json.loads(response)
-							print("OK - previous message is fully JSON Compliant")
+							#print("OK - previous message is fully JSON Compliant")
 						except Exception as e:
 							error_details = traceback.format_exc()
-							print("KO - previous message is not fully JSON Compliant")
-							print(f'Error details: {error_details}')
+							print(f"ERROR - LLM response is not fully JSON Compliant")
+							#print(f'Error details: {error_details}')
 							can_reply = False
 							messages.append({"role": "user", "content": response + " is Invalid JSON. Retry and return ONLY a raw JSON object and follow instructions: " + instructions})
 						try:
@@ -175,6 +178,7 @@ class MicroService(Alix):
 								params = json.loads(tool_call["function"]["arguments"])
 	
 								print(f'Calling tool: {module_function} with parameters: {params}')
+								print("")
 								tool_response = getattr(__import__(module), function)(**params)
 								messages.append({"role": "tool", "tool_call_id": tool_call["id"], "name": tool_call["function"]["name"], "content": json.dumps(tool_response)})
 						except Exception as e:
@@ -184,7 +188,7 @@ class MicroService(Alix):
 				except:
 					pass
 				
-			print(f'can reply = {can_reply}')
+			print("---------------------------- MESSAGE PROCESSED ----------------------------")
 
 			return response
 		except Exception as e:
@@ -250,7 +254,7 @@ class MicroService(Alix):
 			#reduce conversation history to only the most recent interactions	
 			setParam(self.name, 'messages', json.dumps(messages[-(max_conversation_history // 2):]))
 
-			print(f'Conversation history size: {len(messages)}')
+			print(f'MEMORY UPDATED')
 		else:
 			print(f'Conversation history size: {len(messages)}')
 			setParam(self.name, 'long_term_memory', long_term_memory)
@@ -277,7 +281,7 @@ def clean_json(s: str) -> any:
     if match:
         s = match.group(0)
 
-    # Remplacer les sauts de ligne réels DANS les valeurs par \n
+    # Remplacer les sauts de ligne rÃ©els DANS les valeurs par \n
     # (entre les guillemets uniquement)
     def escape_newlines(m):
         return m.group(0).replace('\n', '\\n').replace('\r', '\\r')
