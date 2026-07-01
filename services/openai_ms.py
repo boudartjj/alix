@@ -9,7 +9,7 @@ import ast
 import re
 from datetime import datetime
 import traceback
-
+import asyncio
 
 
 class MicroService(Alix):
@@ -147,7 +147,7 @@ class MicroService(Alix):
 							messages.append({"role": "user", "content": response + " is Invalid JSON. Retry and return ONLY a raw JSON object and follow instructions: " + instructions})
 						try:
 							if can_reply:
-								self.updateMemory(messages, long_term_memory, short_term_memory, max_conversation_history, context_summary_prompt, url, token, model)
+								asyncio.run(self.updateMemory(messages, long_term_memory, short_term_memory, max_conversation_history, context_summary_prompt, url, token, model))
 						except Exception as e:
 							error_details = traceback.format_exc()
 							print(f'{self.name} encountered an error during memory update: {str(e)}')
@@ -216,7 +216,7 @@ class MicroService(Alix):
 
 		return resp
 
-	def updateMemory(self, messages, long_term_memory, short_term_memory, max_conversation_history, context_summary_prompt, url, token, model):
+	async def updateMemory(self, messages, long_term_memory, short_term_memory, max_conversation_history, context_summary_prompt, url, token, model):
 		## Handle conversation history and memory management
 
 		messages = [msg for msg in messages if msg['role'] in ['user', 'assistant']]
